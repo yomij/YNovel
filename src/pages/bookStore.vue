@@ -1,0 +1,75 @@
+<template>
+	<div class="book-store">
+		书城
+	</div>
+</template>
+
+<script>
+	import HelloWorld from '@/components/HelloWorld.vue'
+	export default {
+		components: {
+			HelloWorld
+		},
+		data() {
+			return {
+				logo: 'https://user-images.githubusercontent.com/20720117/48262986-80e02780-e45f-11e8-8426-2872916adad9.png',
+				t: 1,
+				color: '#007d37'
+			}
+		},
+		beforeCreate() {
+			console.log('Page [hello] Vue beforeCreate')
+		},
+		created() {
+			console.log('Page [hello] Vue created')
+			var appInstance = getApp()
+			console.log(appInstance.globalData) // I am global data
+		},
+		beforeMount() {
+			console.log('Page [hello] Vue beforeMount')
+		},
+		mounted() {
+			console.log('Page [hello] Vue mounted')
+		},
+		onLoad: function(options) {
+			// Do some initialize when page load.
+			console.log('Page [hello] onLoad')
+		},
+		onReady: function() {
+			// Do something when page ready.
+			console.log('Page [hello] onReady')
+		},
+		onShow: function() {
+			// Do something when page show.
+			wx.login({
+				success(res) {
+					console.log(res)
+				}
+			})
+			console.log('Page [hello] onShow')
+		},
+		onHide: function() {
+			// Do something when page hide.
+			console.log('Page [hello] onHide')
+		},
+		onUnload: function() {
+			// Do something when page close.
+			console.log('Page [hello] onUnload')
+		},
+		/**
+		 * for other event handlers, please check https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
+		 */
+		methods:{
+			changeStat: function(){
+				this.t++
+				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.book-store {
+
+	}
+</style>

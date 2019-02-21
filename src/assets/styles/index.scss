@@ -1,0 +1,12 @@
+@import "./common";
+
+html, body {
+  color: #333;
+  font-size: 16px;
+}
+
+html, body, p, div, input {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
