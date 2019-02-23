@@ -6,23 +6,24 @@
 			</div>
 		</div>
 		<div class="subscription">
-			<div class="item f-align">
+			<div class="item f-align" v-for="(item, index) in bookList" :class="{'show-op':item.showOperation}" :key="index">
 				<div class="content f-align justify">
-					<div>
-						<img class="book-img" src="https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=e1c6cc2f222eb938f36d7cf2e56385fe/d0c8a786c9177f3ed22833c37dcf3bc79e3d56e4.jpg">
+					<div class="f-align">
+						<img class="book-img" :src="item.mainImg">
 						<div>
-							<p class="title">{{'你是猪吗'}}</p>
-							<p>{{'未读'}}</p>
-							<p>{{'一天前更新'}}</p>
+							<p class="title">{{item.title}}</p>
+							<p>{{item.status}}</p>
+							<p>{{item.lastUpdate}}</p>
 						</div>
 					</div>
-					<img class="more" :src="iconMore" />
+					<img class="more" :src="iconMore" @click="showOperation(index)"/>
 				</div>
 				<div class="extra flex">
 					<div class="operation">顶置</div>
 					<div class="operation">删除</div>
 				</div>
 			</div>
+			<p class="no-more">您已读完全部内容</p>
 		</div>
 	</div>
 </template>
@@ -39,9 +40,25 @@
 			return {
 				avatarDefault: avatar,
 				iconMore,
-				logo: 'https://user-images.githubusercontent.com/20720117/48262986-80e02780-e45f-11e8-8426-2872916adad9.png',
-				t: 1,
-				color: '#007d37'
+				bookList: [{
+					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
+					title: '我是大黑猪',
+					status: '未读',
+					lastUpdate: '昨天',
+					showOperation: false
+				}, {
+					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
+					title: '我是大黑猪',
+					status: '未读',
+					lastUpdate: '昨天',
+					showOperation: false
+				}, {
+					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
+					title: '我是大黑猪',
+					status: '未读',
+					lastUpdate: '昨天',
+					showOperation: false
+				}]
 			}
 		},
 		beforeCreate() {
@@ -94,7 +111,11 @@
 				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
 			},
 			login () {
-
+				this.$router.push({query: {id: 1}, path: '/pages/bookrack/login'})
+			},
+			showOperation (i) {
+				console.log(i)
+				this.$set(this.bookList[i], 'showOperation', !this.bookList[i].showOperation)
 			}
 		}
 	}
@@ -121,7 +142,7 @@
 		}
 		.subscription {
 			width: 100%;
-			margin: 23px auto 0;
+			margin: 12px auto 0;
 			.content {
 				width: 100%;
 				height: 100%;
@@ -130,7 +151,7 @@
 			.item {
 				width: calc(100% + 150px);
 				height: 92px;
-				margin-bottom: 10px;
+				/*margin-bottom: 10px;*/
 				font-size: 11px;
 				color: #666;
 				transition: all .3s;
@@ -138,7 +159,7 @@
 					width: 24px;
 					height: 24px;
 				}
-				.show-op {
+				&.show-op {
 					transform: translateX(-150px);
 				}
 			}
@@ -148,7 +169,7 @@
 			}
 			.book-img {
 				width: 54px;
-				height: 100%;
+				height: 72px;
 				margin-right: 12px;
 				border-radius: 3px;
 			}
@@ -170,6 +191,12 @@
 						background:linear-gradient(45deg, #ed434c 0%,#fe6658 100%);
 					}
 				}
+			}
+			.no-more {
+				font-size: 11px;
+				color: #666;
+				margin: 10px 0;
+				text-align: center;
 			}
 		}
 	}

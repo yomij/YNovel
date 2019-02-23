@@ -1,6 +1,16 @@
 import App from './App'
 import Vue from 'vue'
 import VHtmlPlugin from '@megalo/vhtml-plugin'
+import megaloRouter  from 'megalo-router'
+
+Vue.use(megaloRouter, {
+	mode: 'strict', // strict or loose 可配置项，不配置的话默认为strict
+	tabBars: [ // 必须配置项
+		'pages/bookrack',
+		'pages/bookStore',
+		'pages/recommend'
+	]
+})
 
 Vue.use(VHtmlPlugin)
 
@@ -12,10 +22,10 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-
       'pages/bookrack',
 			'pages/bookStore',
-			'pages/recommend'
+			'pages/recommend',
+			'pages/bookrack/login'
     ],
     tabBar: {
       color: '#333',

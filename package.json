@@ -40,6 +40,7 @@
     "@megalo/api": "^0.2.2",
     "@megalo/vhtml-plugin": "^0.1.2",
     "megalo": "^0.7.3",
+    "megalo-router": "^1.0.3",
     "octoparse": "^0.3.2"
   }
 }
