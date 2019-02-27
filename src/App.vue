@@ -20,7 +20,6 @@
     },
     globalData() {
       return {
-        a: 'I am global data'
       }
     }
   }
