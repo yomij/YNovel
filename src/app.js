@@ -8,7 +8,7 @@ Vue.use(megaloRouter, {
 	mode: 'strict', // strict or loose 可配置项，不配置的话默认为strict
 	tabBars: [ // 必须配置项
     'pages/bookrack/login',
-		// 'pages/bookrack',
+		'pages/bookrack',
 		'pages/bookStore',
 		'pages/recommend'
 	]
@@ -25,10 +25,10 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-      'pages/bookrack/login',
-      'pages/bookrack',
 			'pages/bookStore',
 			'pages/recommend',
+			'pages/bookrack',
+			'pages/bookrack/login',
     ],
     tabBar: {
       color: '#333',
@@ -47,7 +47,7 @@ export default {
 					selectedIconPath: 'static/imgs/home_on.png',
 				},
 				{
-					pagePath: 'pages/bookrack/login',
+					pagePath: 'pages/bookrack',
 					text: '书架',
 					iconPath: 'static/imgs/mine.png',
 					selectedIconPath: 'static/imgs/mine_on.png',

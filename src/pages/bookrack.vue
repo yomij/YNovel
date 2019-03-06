@@ -1,13 +1,16 @@
 <template>
 	<div class="bookrack">
-		<div class="user f-align">
-			<div class="f-align" @click="login">
+		<div class="user f-align-l">
+			<div class="f-g-1 f-align-l"  @click="login">
 				<img :src="avatarDefault"/>请登录
+			</div>
+			<div class="bind">
+				<button>绑定手机号</button>
 			</div>
 		</div>
 		<div class="subscription">
 			<div class="item f-align" v-for="(item, index) in bookList" :class="{'show-op':item.showOperation}" :key="index">
-				<div class="content f-align justify">
+				<div class="content f-align f-s-b">
 					<div class="f-align">
 						<img class="book-img" :src="item.mainImg">
 						<div>
@@ -23,7 +26,11 @@
 					<div class="operation">删除</div>
 				</div>
 			</div>
-			<p class="no-more">您已读完全部内容</p>
+			<p v-if="bookList.length" class="no-more">您已读完全部内容</p>
+			<div class="no-data">
+				<p class="f-18 c-6">暂无作品</p>
+				<p @click="$router.replace({path: 'pages/recommend'})" class="f-13 c-lb">去推荐看看</p>
+			</div>
 		</div>
 	</div>
 </template>
@@ -40,29 +47,8 @@
 			return {
 				avatarDefault: avatar,
 				iconMore,
-				bookList: [{
-					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
-					title: '我是大黑猪',
-					status: '未读',
-					lastUpdate: '昨天',
-					showOperation: false
-				}, {
-					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
-					title: '我是大黑猪',
-					status: '未读',
-					lastUpdate: '昨天',
-					showOperation: false
-				}, {
-					mainImg: 'https://sjbz-fd.zol-img.com.cn/t_s320x510c/g5/M00/09/0C/ChMkJ1uJNc6IPVDAAAoO2v9qSVQAArXegM7fGIACg7y539.jpg',
-					title: '我是大黑猪',
-					status: '未读',
-					lastUpdate: '昨天',
-					showOperation: false
-				}]
+				bookList: []
 			}
-		},
-		beforeCreate() {
-			console.log('Page [hello] Vue beforeCreate')
 		},
 		created() {
 			console.log(this.avatarDefault)
@@ -91,25 +77,16 @@
 					console.log(res)
 				}
 			})
-
 			console.log('Page [hello] onShow')
 		},
 		onHide: function() {
 			// Do something when page hide.
 			console.log('Page [hello] onHide')
 		},
-		onUnload: function() {
-			// Do something when page close.
-			console.log('Page [hello] onUnload')
-		},
 		/**
 		 * for other event handlers, please check https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
 		 */
 		methods:{
-			changeStat: function(){
-				this.t++
-				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
-			},
 			login () {
 				this.$router.push({query: {id: 1}, path: '/pages/bookrack/login'})
 			},
@@ -139,6 +116,20 @@
 				border-radius: 50%;
 				margin-right: 14px;
 			}
+		}
+		.bind {
+			border-left: 2px solid rgba(200, 200, 200, .8);
+			button {
+				margin-left: 15px;
+				padding: 0 13px;
+				font-size: 11px;
+				height: 27px;
+				line-height: 27px;
+				border-radius: 30px;
+				color: #fff;
+				background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
+			}
+
 		}
 		.subscription {
 			width: 100%;
@@ -197,6 +188,13 @@
 				color: #666;
 				margin: 10px 0;
 				text-align: center;
+			}
+		}
+		.no-data {
+			text-align: center;
+			margin-top: 170px;
+			a {
+				margin-top: 13px;
 			}
 		}
 	}
