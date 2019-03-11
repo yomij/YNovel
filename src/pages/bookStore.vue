@@ -1,9 +1,10 @@
 <template>
 	<div class="book-store">
-		<div class="f-align-l search">
+		<div class="f-align-l search" @click="searchShow = true">
 			<i class="iconfont icon-yonghu"></i>
 			<p>{{'aaa'}}</p>
 		</div>
+		<Search @transShow="searchShow = false" :show="searchShow"/>
 		<nav class="f-align-l">
 			<div class="item" @click="navActive = index" v-for="(item, index) in ['男生', '女生']" :key="index">{{item}}</div>
 			<div class="border" :style="{left: 32 * (2 * navActive + 1) + 'px'}"></div>
@@ -12,37 +13,68 @@
 			<section>
 				<h2>24小时点击</h2>
 				<Carousel :list="topList"/>
-				<div class="book-list">
-					<div>
-						<img />
-						<p>黄金眼</p>
-						<p>作者</p>
-					</div>
+				<div class="book-list f-s-b">
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
+				</div>
+			</section>
+			<section>
+				<h2></h2>
+				<div class="book-list f-s-b">
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList.concat(topList)"/>
+				</div>
+			</section>
+			<section>
+				<h2>24小时点击</h2>
+				<div class="book-list f-s-b">
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
 				</div>
 			</section>
 		</article>
 	</div>
 </template>
 
+<config>
+	{
+		"navigationBarBackgroundColor": "#ffffff",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "书城",
+		"backgroundColor": "#eeeeee",
+		"backgroundTextStyle": "light",
+		"usingComponents": {
+			"van-search": "/vant/search/index",
+			"van-popup": "/vant/popup/index"
+		}
+	}
+</config>
+
 <script>
 	import Carousel from '@/components/Carousel.vue'
+	import Book from '@/components/Book.vue'
+	import Search from '@/components/YSearch.vue'
 	export default {
 		components: {
-			Carousel
+			Carousel,
+			Book,
+			Search
 		},
 		data() {
 			return {
 				navActive: 0,
+				searchShow: true,
 				topList: [{
-					title: '1',
-					author: 'yomi',
+					title: '吃葡萄',
+					author: '有米',
 					mainImg:'http://hbimg.b0.upaiyun.com/75cdb7cfd53c1eeead7f5333e673e9e669e456d5752e-RNtNWd_fw658'
 				},{
-					title: '2',
-					author: 'yomi',
-					mainImg: 'http://img1.imgtn.bdimg.com/it/u=3364060647,1821019892&fm=26&gp=0.jpg
+					title: '吃葡萄皮',
+					author: '番茄',
+					mainImg: 'http://img1.imgtn.bdimg.com/it/u=3364060647,1821019892&fm=26&gp=0.jpg'
 				},{
-					title: '3',
+					title: '吃葡萄不吐葡萄皮',
+					author: '土豆',
+					mainImg:'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'
+				}, {
+					title: '吃葡萄不吐葡萄皮',
 					author: 'yomi',
 					mainImg:'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'
 				}]
@@ -100,7 +132,7 @@
 	}
 	.search {
 		width: 91.67%;
-		margin: 0 auto 18px;
+		margin: 0 auto;
 		background: #f6f7fb;
 		height: 38px;
 		border-radius: 4px;
@@ -115,13 +147,27 @@
 	}
 	.main {
 		padding: 0 15px;
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+			line-height: 100%;
+			margin: 18px 0;
+		}
+		section {
+			border-bottom: 1px solid #e8ebf0;
+		}
 	}
-
+	.book-list {
+		margin-top: 16px;
+		.book {
+			margin-bottom: 18px;
+		}
+	}
 	nav {
 		position: relative;
 		height: 53px;
 		line-height: 50px;
-		box-shadow: 0 8px 10px rgba(57, 74, 113, 0.1);
+		box-shadow: 0 8px 10px rgba(57, 74, 113, 0.05);
 		.item {
 			font-size: 16px;
 			padding: 0 16px;

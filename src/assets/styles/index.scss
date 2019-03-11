@@ -81,3 +81,33 @@ a:link,a:active,a:visited,a:hover {
   -webkit-tap-highlight-color: transparent;
 }
 
+
+// 样式
+
+.field-index--van-field {
+  /*height: 38px;*/
+  background: #fff;
+  color: #666;
+  font-size: 13px;
+}
+.van-search {
+  height: 38px;
+  background: #fff !important;
+  color: #666;
+  font-size: 15px;
+  padding: 0 !important;
+}
+.van-field__input {
+  font-size: 15px;
+}
+.van-cell__right-icon-wrap {
+  font-size: 18px;
+}
+.van-popup, ._van-popup {
+  /*position: absolute;*/
+  height: 100% !important;
+  width: 100%;
+}
+.van-overlay {
+  background-color: #fff !important;
+}

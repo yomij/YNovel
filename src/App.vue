@@ -1,4 +1,12 @@
 
+<config>
+	{
+		"usingComponents": {
+			"van-search": "/vant/search/index"
+		}
+	}
+</config>
+
 <script>
   export default {
     mpType: 'app',

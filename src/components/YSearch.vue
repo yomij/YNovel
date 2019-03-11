@@ -1,32 +1,46 @@
 <template>
 	<div class="y-search">
-		<div class="search-box van-hairline--bottom">
-			<van-search class="" @focus="showResult" @blur="hideResult" class="search-input" @cancel="onCancel" placeholder="请输入搜索关键词" />
-		</div>
-		<div v-if="resultShow"  class="search-result">
-			<div class="history">
-				<h3>搜索历史<i class="iconfont"></i></h3>
-				<div class="box van-hairline--surround">历史A</div>
-				<div class="box van-hairline--surround">历史B</div>
+		<van-popup :show="show" @close="$emit('transShow', false)" position="right">
+			<div class="search-box van-hairline--bottom f-s-b">
+				<van-search class="search-input f-g-1" @blur="onBlur" @focus="onFocus" @search="onSearch" @cancel="onCancel" placeholder="请输入搜索关键词" />
+				<span class="c-b" @click="onCancel">取消</span>
 			</div>
-			<div class="hot-search">
-				<h3>热门搜索</h3>
-				<div class="box van-hairline--surround">历史A</div>
-				<div class="box van-hairline--surround">历史B</div>
+			<div class="search-result" v-if="!resultShow">
+				<div class="history">
+					<h3>搜索历史<i class="iconfont"></i></h3>
+					<div class="box van-hairline--surround">历史A</div>
+					<div class="box van-hairline--surround">历史B</div>
+				</div>
+				<div class="hot-search">
+					<h3>热门搜索</h3>
+					<div class="box van-hairline--surround">历史A</div>
+					<div class="box van-hairline--surround">历史B</div>
+				</div>
 			</div>
-		</div>
+			<ul class="search-helper" v-else>
+				<li class="van-hairline--bottom f-align-l"><i class="iconfont icon-yonghu"></i>1</li>
+				<li>1</li>
+				<li>1</li>
+				<li>1</li>
+			</ul>
+		</van-popup>
 	</div>
 </template>
 
 
-
 <script>
 	export default {
-		name: 'YSearch',
-		props: { },
-		data() {
+		name: 'search',
+		props: {
+			show: false
+		},
+		model: {
+			prop: 'show',
+			event: 'transShow'
+		},
+		data () {
 			return {
-				resultShow: false,
+				resultShow: true,
 				searchHistory: [],
 			}
 		},
@@ -38,16 +52,24 @@
 			hideResult () {
 				this.resultShow = false
 			},
-			handleSearch (e) {
+			onCancel () {
+				console.log('aaa')
+				this.$emit('transShow', false)
+			},
+			onBlur () {
+				this.resultShow = false
+			},
+			onFocus () {
+				this.resultShow = true
+			},
+			onSearch (e) {
 				console.log(e)
 				// 搜索
 				Megalo.setStorage({
 					key: 'searchHistory',
 					data: this.searchHistory.push('aaa')
 				})
-			},
-			onCancel () {
-
+				this.$router.replace({path: 'pages/searchResult/index', query: {search: e.detail}})
 			}
 		},
 		watch: {
@@ -61,30 +83,34 @@
 </script>
 
 <style lang="scss" scoped>
-	.y-search {
-		height: 100%;
-
+	.search-box {
+		font-size: 15px;
+		padding: 0 16px 0 6px
 	}
-	.search-box /deep/ {
-		.field-index--van-field {
-			/*height: 38px;*/
-			background: #fff;
-			color: #666;
-			font-size: 13px;
+	.search-result {
+		padding: 0 16px;
+		h3 {
+			font-size: 15px;
+			line-height: 100%;
+			margin: 18px 0;
 		}
-		.van-search {
-			height: 38px;
-			background: #fff !important;
-			color: #666;
-			padding: 13px 16px;
+		.box {
+			border-radius: 3px;
+			display: inline-block;
+			text-align: center;
+			padding: 13px;
+			font-size: 14px;
+			margin-right: 8px;
 		}
 	}
-	.box {
-		border-radius: 3px;
-		display: inline-block;
-		text-align: center;
-		padding: 13px;
-		font-size: 12px;
-		margin-right: 8px;
+	.search-helper {
+		font-size: 15px;
+		padding: 10px 16px;
+		li {
+			padding: 10px 0;
+		}
+		i {
+			margin-right: 8px;
+		}
 	}
 </style>

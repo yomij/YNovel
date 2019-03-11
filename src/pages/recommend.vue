@@ -36,8 +36,8 @@
 	"backgroundColor": "#eeeeee",
 	"backgroundTextStyle": "light",
 	"usingComponents": {
-	"van-search": "/vant/search/index"
-	}
+		"van-search": "/vant/search/index"
+		}
 	}
 </config>
 
@@ -186,11 +186,5 @@
 			padding-right: 10px;
 			color: #868c98;
 		}
-	}
-	.no-more {
-		font-size: 13px;
-		color: #999;
-		text-align: center;
-		margin-bottom: 15px;
 	}
 </style>

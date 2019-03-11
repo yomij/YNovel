@@ -1,4 +1,4 @@
-import Login from './login.vue'
+import Login from './index.vue'
 import Vue from 'vue'
 
 const app = new Vue( Login )
