@@ -4,7 +4,7 @@
 			<i class="iconfont icon-yonghu"></i>
 			<p>{{'aaa'}}</p>
 		</div>
-		<Search @transShow="searchShow = false" :show="searchShow"/>
+		<YSearch @transShow="searchShow = false" :show="searchShow"/>
 		<nav class="f-align-l">
 			<div class="item" @click="navActive = index" v-for="(item, index) in ['男生', '女生']" :key="index">{{item}}</div>
 			<div class="border" :style="{left: 32 * (2 * navActive + 1) + 'px'}"></div>
@@ -50,12 +50,12 @@
 <script>
 	import Carousel from '@/components/Carousel.vue'
 	import Book from '@/components/Book.vue'
-	import Search from '@/components/YSearch.vue'
+	import YSearch from '@/components/YSearch.vue'
 	export default {
 		components: {
 			Carousel,
 			Book,
-			Search
+			YSearch
 		},
 		data() {
 			return {

@@ -1,7 +1,7 @@
 <template>
 	<div class="book-detail">
-		<div class="nav">
-			{{'一只狗的一生'}}
+		<div class="nav f-align" :class="{show: navShow}">
+			<i class=" back iconfont icon-weixin"></i>{{'一只狗的一生'}}
 		</div>
 		<scroll-view
 				class="main" id="detail-container"
@@ -82,6 +82,7 @@
 		},
 		data() {
 			return {
+			  navShow: false,
 				doScroll: null,
 				showArticle: false,
 				descShow: false,
@@ -96,7 +97,7 @@
 			query.exec(function (res) {
 				console.log(res)
 			})
-			this.doScroll = t(this.handleScroll, 100)
+			this.doScroll = t(this.handleScroll, 50)
 		},
 		methods:{
 			loginWx() {
@@ -112,7 +113,9 @@
 			},
 			handleScroll (e) {
 				if (e.detail.scrollTop > 150) {
-					console.log('aa')
+					this.navShow = true
+				} else {
+          this.navShow = false
 				}
 			}
 		}
@@ -131,10 +134,25 @@
 		height: 100%;
 		.nav {
 			position: fixed;
+			padding-top: 20px;
 			top: 0;
 			height: 80px;
 			width: 100%;
 			text-align: center;
+			background: rgb(30, 32, 55);
+			color: #fff;
+			z-index: 20;
+			display: none;
+			opacity: 0;
+			transition: all ease-in .3s;
+			&.show {
+				display: block;
+				opacity: 1;
+			}
+			i {
+				position: absolute;
+				left: 16px;
+			}
 		}
 	}
 	.main {
@@ -254,6 +272,9 @@
 			text-indent: 30px;
 			font-size: 18px;
 			line-height: 28px;
+		}
+		.continue {
+			margin: 50px 0;
 		}
 		.icon {
 			display: inline-block;

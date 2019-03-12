@@ -30,7 +30,7 @@
 
 <script>
 	export default {
-		name: 'search',
+		name: 'YSearch',
 		props: {
 			show: false
 		},
