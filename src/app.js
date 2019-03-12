@@ -25,7 +25,8 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-			// 'pages/searchResult/index',
+			'pages/bookDetail/index',
+			'pages/searchResult/index',
 			'pages/bookStore',
 			'pages/recommend',
 			'pages/bookrack',

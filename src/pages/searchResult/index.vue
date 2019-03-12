@@ -42,9 +42,10 @@
 			handleSearch(e) {
 				console.log(e)
 				// 搜索
+				const _this = this
 				Megalo.setStorage({
 					key: 'searchHistory',
-					data: this.searchHistory.push('aaa')
+					data: _this.searchHistory.push('aaa')
 				})
 			},
 			onCancel() {
@@ -99,7 +100,11 @@
 			color: #666;
 			line-height: 20px;
 			max-height: 40px;
-			overflow: hidden;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
 		}
 		.reason {
 			font-size: 14px;

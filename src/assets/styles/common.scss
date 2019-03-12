@@ -19,6 +19,10 @@
   @extend .flex;
   justify-content: flex-end;
 }
+.f-a-s {
+  @extend .flex;
+  align-items: flex-start;
+}
 
 .f-dir-column {
   flex-direction: column;
@@ -29,7 +33,7 @@
 }
 .f-s-b {
   display: flex;
-  flex-flow: row wrap;
+  //flex-flow: row wrap;
   justify-items: center;
   align-items: center;
   justify-content: space-between;
@@ -47,7 +51,7 @@
 }
 //字体类
 .f-18 {
- font-size: 18px;
+ font-size: 18px !important;
 }
 
 .f-16 {
@@ -64,6 +68,10 @@
 
 .f-11 {
   font-size: 11px;
+}
+
+.f-12 {
+  font-size: 12px;
 }
 
 .f-10 {
