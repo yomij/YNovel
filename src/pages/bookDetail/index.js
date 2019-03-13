@@ -7,6 +7,9 @@ app.$mount()
 
 export default {
 	config: {
-		navigationStyle: 'custom'
+		navigationStyle: 'custom',
+		usingComponents: {
+			'van-popup': '/vant/popup/index'
+		}
 	}
 }

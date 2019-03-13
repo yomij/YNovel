@@ -1,18 +1,31 @@
 <template>
 	<div class="book-detail">
-		<div class="nav f-align" :class="{show: navShow}">
+		<div class="nav f-align" :class="{show: navShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': navShow ? colors[2] : ''}">
 			<i class=" back iconfont icon-weixin"></i>{{'一只狗的一生'}}
 		</div>
+		<van-popup
+			class="list"
+			:show="listShow"
+			position="left"
+			:overlay="true"
+		>
+			内容
+		</van-popup>
 		<scroll-view
 				class="main" id="detail-container"
 				scroll-y
 				@scroll="doScroll"
 		>
-			<div class="book-bg" :style="{'background-image': 'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'}">
-				<img :src="'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'"/>
+			<div class="head-back f-align-l" :style="{'padding-top': statusBarHeight + 'px'}">
+				<i class="iconfont icon-weixin"></i>
+			</div>
+			<div v-for="c in colors" :style="{background: c, height: '50px', width: '50px'}"></div>
+			<div class="book-bg" :style="{'background-color': colors[0]}">
+				<div class="bg"  :style="{'background': 'url(' + 'http://img1.3lian.com/2015/w2/10/d/24.jpg' + ')', 'background-color': color}"></div>
+				<img :src="'http://img1.3lian.com/2015/w2/10/d/24.jpg'"/>
 				<p class="title">{{'一只狗的一生'}}</p>
 				<p class="f-12">大眼<span class="dot"></span>都市</p>
-				<div class="extra f-align">
+				<div class="extra f-align" :style="{'background-color': colors[1]}">
 					<div class="item">
 						<span>500</span>万字<br/>{{'连载'}}
 					</div>
@@ -30,7 +43,7 @@
 			</p>
 			<div class="catalogue van-hairline--top-bottom f-s-b">
 				<div class="f-align-l f-18"><i class="iconfont icon-weixin mr-9"></i>目录</div>
-				<p class="latest">昨天12：07更新至第三百七十章猪死了</p>
+				<p class="latest" @click="showList">昨天12：07更新至第三百七十章猪死了</p>
 				<i class="iconfont icon-weixin f-18"></i>
 			</div>
 			<section class="comments">
@@ -76,18 +89,32 @@
 <script>
 	import t from '@/utils/throttle'
 	import Comment from '@/components/Comment.vue'
+	import any from 'rgbaster'
 	export default {
 		components: {
 			Comment
 		},
 		data() {
 			return {
+				colors: [],
+				listShow: false,
 			  navShow: false,
 				doScroll: null,
 				showArticle: false,
 				descShow: false,
+				statusBarHeight: 20,
 				desc: '我不ds是猪啊,13我真的不30213是猪啊啊,啊我不是猪14啊我真的不是猪,啊啊啊我!不是猪啊我真的不，是猪啊啊啊我。不是猪啊我真的不是猪啊啊啊我不是猪啊我真的不是猪啊啊啊我不是猪啊我真的不是猪啊啊啊我不是猪啊我真的不是猪啊啊啊'
 			}
+		},
+		created () {
+			this.$api.getColor().then(res => {
+				console.log(res)
+				this.colors = res.colors
+			})
+			Megalo.getSystemInfo().then(res => {
+				console.log(res)
+				this.statusBarHeight = res.statusBarHeight
+			})
 		},
 		onShow () {
 			const query = Megalo.createSelectorQuery();
@@ -101,7 +128,7 @@
 		},
 		methods:{
 			loginWx() {
-				console.log('login')
+				console.log('http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg')
 				Megalo.login().then(res => {
 					// Megalo.getUserInfo().then(res => console.log(res))
 					this.$api.loginWx({
@@ -117,6 +144,10 @@
 				} else {
           this.navShow = false
 				}
+			},
+			showList () {
+				this.listShow = true
+				this.navShow = true
 			}
 		}
 	}
@@ -127,19 +158,17 @@
 		margin-right: 9px;
 	}
 
-
 	.book-detail {
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		.nav {
 			position: fixed;
-			padding-top: 20px;
 			top: 0;
-			height: 80px;
+			height: 70px;
 			width: 100%;
 			text-align: center;
-			background: rgb(30, 32, 55);
+			/*background: rgb(30, 32, 55);*/
 			color: #fff;
 			z-index: 20;
 			display: none;
@@ -154,20 +183,46 @@
 				left: 16px;
 			}
 		}
+		.list /deep/ .van-popup, ._van-popup {
+			width: 80% !important;
+			margin-top: 70px;
+		}
 	}
 	.main {
 		position: relative;
 		height: calc(100% - 56px);
 		overflow: auto;
+		.head-back {
+			position: fixed;
+			height: 70px;
+			width: 100%;
+			padding-left: 16px;
+			line-height: 70px;
+		}
+
 	}
 	.book-bg {
 		position: relative;
 		width: 100%;
 		height: 317px;
-		background-color: rgba(36,38,59, .8);
+		/*background-color: rgba(36,38,59, .8);*/
+		-webkit-background-size: 100%;
+		background-size: 100%;
 		padding-top: 54px;
 		color: #fff;
 		text-align: center;
+		.bg {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			z-index: -1;
+			background-size: contain;
+			background-position: 0 90%;
+			filter: blur(20px);
+			overflow: hidden;
+		}
 		.dot {
 			display: inline-block;
 			height: 4px;

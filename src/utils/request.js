@@ -28,6 +28,7 @@ const request = options => {
       data
     }).then(res => {
       if(res.statusCode >= 200 && res.statusCode < 400) {
+        console.log(res.data)
         resolve(res.data)
       } else {
         reject(res.statusCode)

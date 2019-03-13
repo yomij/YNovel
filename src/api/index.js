@@ -6,6 +6,13 @@ const loginWx = (data) => req({
   data
 })
 
+const getColor = (params) => req({
+	url: '/api/book/color',
+	method: 'get',
+	params
+})
+
 export default {
-  loginWx
+  loginWx,
+	getColor
 }
