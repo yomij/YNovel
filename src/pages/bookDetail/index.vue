@@ -1,15 +1,15 @@
 <template>
 	<div class="book-detail">
-		<div class="nav f-align" :class="{show: navShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': navShow ? colors[2] : ''}">
+		<div class="nav f-align" :class="{show: navShow || listShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': colors[2]}">
 			<i class=" back iconfont icon-weixin"></i>{{'一只狗的一生'}}
 		</div>
 		<van-popup
 			class="list"
 			:show="listShow"
 			position="left"
-			:overlay="true"
+			@close="listShow = false"
 		>
-			内容
+			<LoadSection @loading="loading" :sectionList="sectionList"/>
 		</van-popup>
 		<scroll-view
 				class="main" id="detail-container"
@@ -19,10 +19,10 @@
 			<div class="head-back f-align-l" :style="{'padding-top': statusBarHeight + 'px'}">
 				<i class="iconfont icon-weixin"></i>
 			</div>
-			<div v-for="c in colors" :style="{background: c, height: '50px', width: '50px'}"></div>
+			<!--<div v-for="c in colors" :style="{background: c, height: '50px', width: '50px'}"></div>-->
 			<div class="book-bg" :style="{'background-color': colors[0]}">
-				<div class="bg"  :style="{'background': 'url(' + 'http://img1.3lian.com/2015/w2/10/d/24.jpg' + ')', 'background-color': color}"></div>
-				<img :src="'http://img1.3lian.com/2015/w2/10/d/24.jpg'"/>
+				<div class="bg"  :style="{'background-image': 'url(' + mainImg + ')', 'background-color': color}"></div>
+				<img :src="mainImg"/>
 				<p class="title">{{'一只狗的一生'}}</p>
 				<p class="f-12">大眼<span class="dot"></span>都市</p>
 				<div class="extra f-align" :style="{'background-color': colors[1]}">
@@ -89,15 +89,62 @@
 <script>
 	import t from '@/utils/throttle'
 	import Comment from '@/components/Comment.vue'
+	import LoadSection from '@/components/LoadSection.vue'
 	import any from 'rgbaster'
 	export default {
 		components: {
-			Comment
+			Comment,
+			LoadSection
 		},
 		data() {
 			return {
+				mainImg: '',
 				colors: [],
-				listShow: false,
+				sectionList: [
+					{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				},{
+					title: '第一章 嘶啦嘶啦地',
+					time: '2019-09-30 12:12:12'
+				}],
+				listShow: true,
 			  navShow: false,
 				doScroll: null,
 				showArticle: false,
@@ -109,6 +156,7 @@
 		created () {
 			this.$api.getColor().then(res => {
 				console.log(res)
+				this.mainImg = res.mainImg
 				this.colors = res.colors
 			})
 			Megalo.getSystemInfo().then(res => {
@@ -128,7 +176,6 @@
 		},
 		methods:{
 			loginWx() {
-				console.log('http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg')
 				Megalo.login().then(res => {
 					// Megalo.getUserInfo().then(res => console.log(res))
 					this.$api.loginWx({
@@ -147,7 +194,38 @@
 			},
 			showList () {
 				this.listShow = true
-				this.navShow = true
+			},
+			loading () {
+				console.log('loading')
+				this.sectionList.push(...[{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				},{
+					title: 'aaa',
+					time: 'aaa'
+				}])
+				this.sectionList.splice()
 			}
 		}
 	}
@@ -170,10 +248,10 @@
 			text-align: center;
 			/*background: rgb(30, 32, 55);*/
 			color: #fff;
-			z-index: 20;
 			display: none;
 			opacity: 0;
-			transition: all ease-in .3s;
+			transition: all ease-in .15s;
+			z-index: 2222;
 			&.show {
 				display: block;
 				opacity: 1;
@@ -183,10 +261,34 @@
 				left: 16px;
 			}
 		}
-		.list /deep/ .van-popup, ._van-popup {
-			width: 80% !important;
-			margin-top: 70px;
+		.list {
+			font-size: 17px;
+			color: #000;
+			.content {
+				padding-left: 16px;
+				height: 100%;
+			}
+			.title {
+				height: 36px;
+				line-height: 36px;
+			}
+			.section {
+				line-height: 28px;
+				padding: 8px;
+			}
 		}
+		.list /deep/ {
+			.van-popup, ._van-popup {
+				width: 80% !important;
+				margin-top: 70px;
+			}
+			.van-overlay {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+			}
+		}
+
 	}
 	.main {
 		position: relative;
@@ -211,15 +313,16 @@
 		padding-top: 54px;
 		color: #fff;
 		text-align: center;
+		overflow: hidden;
 		.bg {
+			overflow: hidden;
 			position: absolute;
 			left: 0;
 			top: 0;
 			height: 100%;
 			width: 100%;
 			z-index: -1;
-			background-size: contain;
-			background-position: 0 90%;
+			background-size: 100% 100%;
 			filter: blur(20px);
 			overflow: hidden;
 		}
@@ -329,7 +432,11 @@
 			line-height: 28px;
 		}
 		.continue {
-			margin: 50px 0;
+			width: 80px;
+			font-size: 15px;
+			height: 35px;
+			line-height: 35px;
+			margin: 60px auto;
 		}
 		.icon {
 			display: inline-block;
