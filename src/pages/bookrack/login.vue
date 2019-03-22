@@ -17,19 +17,18 @@
           <i class="iconfont icon-kejian" ></i>
         </div>
 				<p class="c-cyan f-11 agreement">同意<用户协议></p>
-        <button>登陆</button>
+        <button class="login">登陆</button>
       </div>
     </div>
 		<div class="extra">
 			<p class="t-a-c f-11 c-6">其他登陆方式</p>
 			<div class="f-align">
-				<div class="f-align f-dir-column" @click="loginWx">
+				<button open-type="getUserInfo" @getuserinfo="getUserInfo" class="f-align f-dir-column" @click="loginWx">
 					<div class="wx radius f-align">
 						<i class="iconfont icon-weixin"></i>
 					</div>
-					<!--<button open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>-->
 					<p class="c-cyan f-11">微信登陆</p>
-				</div>
+				</button>
 			</div>
 		</div>
   </div>
@@ -59,18 +58,20 @@ export default {
 
     }
   },
+	created () {
+		Megalo.getSetting().then(res => console.log(res))
+	},
   methods:{
-    loginWx() {
-      console.log('login')
-      Megalo.login().then(res => {
-        // Megalo.getUserInfo().then(res => console.log(res))
-        this.$api.loginWx({
-          code: res.code
-        }).then(res => {
-          console.log(res)
-        })
-      })
-    }
+	  getUserInfo(e) {
+		
+		  Megalo.getUserInfo().then(info =>  Megalo.login().then(res => {
+			  this.$api.loginWx({
+				  code: res.code
+			  }).then(res => {
+				  console.log(res, info)
+			  })
+		  }))
+	  }
   }
 }
 </script>
@@ -119,14 +120,14 @@ export default {
 			margin: 0 15px;
 		}
   }
-  button {
+  button.login {
     width: 78.4%;
     height: 50px;
     border-radius: 1000px;
     color: #fff;
 		background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
 		opacity: .8;
-		margin-top: 34px;
+		margin: 34px auto 0;
   }
 	.agreement {
 		margin: 16px 0 0 4%;
@@ -135,6 +136,12 @@ export default {
 		position: absolute;
 		width: 100%;
 		bottom: 30px;
+		button {
+			background: none;
+			&:after {
+				border: none;
+			}
+		}
 	}
   .wx {
     border: 1px solid #c7dad0;

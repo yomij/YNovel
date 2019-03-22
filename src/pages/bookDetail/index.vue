@@ -1,8 +1,9 @@
 <template>
 	<div class="book-detail">
-		<div class="nav f-align" :class="{show: navShow || listShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': colors[2]}">
-			<i class=" back iconfont icon-weixin"></i>{{'一只狗的一生'}}
-		</div>
+		<nav class="nav f-align" :class="{show: navShow || listShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': colors[2]}">
+			<i class=" back iconfont icon-weixin" @click="$router.go(-1)"></i>{{'一只狗的一生'}}
+		</nav>
+
 		<van-popup
 			class="list"
 			:show="listShow"
@@ -74,13 +75,13 @@
 		</scroll-view>
 
 		<footer class="f-align-l f-s-b">
-			<div class="f-dir-column f-10 c-9 t-a-c">
+			<button class="share f-dir-column f-10 c-9 t-a-c" open-type='share'>
 				<i class="iconfont icon-weixin"></i>
 				分享给好友
-			</div>
-			<div class="f-align-l">
+			</button>
+			<div class="f-align-l btn">
 				<button>加入书架</button>
-				<button>立即阅读</button>
+				<button @click="$router.push('/pages/readPage/index')">立即阅读</button>
 			</div>
 		</footer>
 	</div>
@@ -90,7 +91,7 @@
 	import t from '@/utils/throttle'
 	import Comment from '@/components/Comment.vue'
 	import LoadSection from '@/components/LoadSection.vue'
-	import any from 'rgbaster'
+
 	export default {
 		components: {
 			Comment,
@@ -160,7 +161,6 @@
 				this.colors = res.colors
 			})
 			Megalo.getSystemInfo().then(res => {
-				console.log(res)
 				this.statusBarHeight = res.statusBarHeight
 			})
 		},
@@ -477,22 +477,34 @@
 			color: #000;
 			font-size: 20px;
 		}
-		button {
-			width: 83px;
-			height: 34px;
-			border-radius: 34px;
-			line-height: 34px;
+		.share {
+			outline: none;
+			background: none;
 			border: none;
-			font-size: 15px;
-
-			&:first-child {
-				background: #ffd3d8;
-				color: #fa1510;
-				margin-right: 7px;
+			box-shadow: none;
+			height: 34px;
+			line-height: 1;
+			&:after{
+				border: none;
 			}
-			&:last-child {
-				background: #f95c53;
-				color: #fff;
+		}
+		.btn {
+			button {
+				width: 83px;
+				height: 34px;
+				border-radius: 34px;
+				line-height: 34px;
+				border: none;
+				font-size: 15px;
+				&:first-child {
+					background: #ffd3d8;
+					color: #fa1510;
+					margin-right: 7px;
+				}
+				&:last-child {
+					background: #f95c53;
+					color: #fff;
+				}
 			}
 		}
 	}

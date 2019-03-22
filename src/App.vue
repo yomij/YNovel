@@ -26,8 +26,9 @@
       console.log('App onError')
       console.log(msg)
     },
-    globalData() {
+    async globalData() {
       return {
+      	barHeight: await Megalo.getSystemInfo()
       }
     }
   }

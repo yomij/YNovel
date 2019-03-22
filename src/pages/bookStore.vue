@@ -20,7 +20,7 @@
 			<section>
 				<h2></h2>
 				<div class="book-list f-s-b">
-					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList.concat(topList)"/>
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
 				</div>
 			</section>
 			<section>
@@ -60,7 +60,7 @@
 		data() {
 			return {
 				navActive: 0,
-				searchShow: true,
+				searchShow: false,
 				topList: [{
 					title: '吃葡萄',
 					author: '有米',

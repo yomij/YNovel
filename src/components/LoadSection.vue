@@ -1,7 +1,7 @@
 <template>
-	<scroll-view scroll-y class="section-list" @scroll="sectionScroll">
-		<h2 class="title van-hairline--bottom">正文卷</h2>
-		<div class="section van-hairline--bottom" v-for="(item, index) in sectionList" :key="index">
+	<scroll-view :style="{color: color[0], background: color[1]}" scroll-y class="section-list" @scroll="sectionScroll">
+		<h2 class="title" :class="{'van-hairline--bottom': !noBorder}">正文卷</h2>
+		<div class="section-y section" :class="{'van-hairline--bottom': !noBorder}" v-for="(item, index) in sectionList" :key="index">
 			<p>{{item.title}}</p>
 			<p>{{item.time}}</p>
 		</div>
@@ -10,22 +10,36 @@
 
 <script>
 	export default {
-		name: 'HelloWorld',
+		name: 'loading',
 		props: {
 			sectionList: {
 				default: []
+			},
+			color: {
+				default: []
+			},
+			noBorder: {
+				default: false
 			}
 		},
 		data() {
 			return {
 				totalHeight: 0,
 				isLoading: false,
-				screenHeight: 0
+				screenHeight: 0,
+				sectionHeight: 0
 			}
 		},
-		created () {
+		onShow () {
 			this.isLoading = false
-			this.totalHeight = 36 + 72 * (this.sectionList.length - 1)
+			const _this = this
+			const query = Megalo.createSelectorQuery();
+			query.select('.section-y').boundingClientRect()
+			query.exec(function (res) {
+				console.log(res)
+				_this.sectionHeight = res[0].height
+			})
+			this.totalHeight = 36 + this.sectionHeight * (this.sectionList.length - 1)
 			Megalo.getSystemInfo().then(res => {
 				this.screenHeight = res.screenHeight
 			})
@@ -39,19 +53,16 @@
 			sectionScroll (e) {
 				if (this.isLoading || !this.screenHeight) return
 				let top = e.detail.scrollTop
-				console.log(top, this.totalHeight, top > this.totalHeight - this.screenHeight)
 				if (top > this.totalHeight - this.screenHeight) {
 					this.isLoading = true
-					console.log('emit', top > this.totalHeight - this.screenHeight)
 					this.$emit('loading')
 				}
 			}
 		},
 		watch: {
 			sectionList(v) {
-				console.log('change')
 				this.isLoading = false
-				this.totalHeight = 36 + 72 * (v.length - 1)
+				this.totalHeight = 36 + this.sectionHeight * (v.length - 1)
 			}
 		}
 	}
@@ -62,7 +73,6 @@
 		padding-left: 16px;
 		height: 100%;
 		font-size: 17px;
-		color: #000;
 		.title {
 			height: 36px;
 			line-height: 36px;

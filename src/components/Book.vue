@@ -1,5 +1,5 @@
 <template>
-	<div class="book">
+	<div class="book" @click="$router.push('/pages/bookDetail/index')">
 		<img :src="book.mainImg"/>
 		<p class="title">{{book.title}}</p>
 		<p class="author">{{book.author}}</p>

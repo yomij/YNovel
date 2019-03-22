@@ -25,12 +25,14 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-			'pages/bookDetail/index',
+	    'pages/bookrack/login',
+	    'pages/bookDetail/index',
+	    'pages/bookStore',
+	    'pages/readPage/index',
 			'pages/searchResult/index',
-			'pages/bookStore',
-			'pages/recommend',
+	    'pages/recommend',
 			'pages/bookrack',
-			'pages/bookrack/login',
+			// 'pages/bookrack/login',
     ],
     tabBar: {
       color: '#333',
@@ -60,7 +62,7 @@ export default {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'Yomi',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white'
     }
   }
 }
