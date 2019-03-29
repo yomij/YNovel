@@ -1,5 +1,5 @@
 import qs from 'qs'
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'http://localhost:3100'
 // const BASE_URL = 'http://23s7k31667.imwork.net:38560'
 /**
  * @Description 请求方法

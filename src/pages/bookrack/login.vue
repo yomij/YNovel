@@ -66,7 +66,8 @@ export default {
 		
 		  Megalo.getUserInfo().then(info =>  Megalo.login().then(res => {
 			  this.$api.loginWx({
-				  code: res.code
+				  code: res.code,
+					userInfo: info.userInfo
 			  }).then(res => {
 				  console.log(res, info)
 			  })
@@ -127,7 +128,11 @@ export default {
     color: #fff;
 		background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
 		opacity: .8;
-		margin: 34px auto 0;
+		/*margin: 34px auto 0;*/
+	  margin-top: 34px;
+	  position: relative;
+	  transform: translateX(-50%);
+	  left: 50%;
   }
 	.agreement {
 		margin: 16px 0 0 4%;

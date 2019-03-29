@@ -4,7 +4,7 @@
 			<i class="iconfont icon-yonghu"></i>
 			<p>{{'aaa'}}</p>
 		</div>
-		<YSearch @transShow="searchShow = false" :show="searchShow"/>
+		<Search @transShow="searchShow = false" :show="searchShow"/>
 		<nav class="f-align-l">
 			<div class="item" @click="navActive = index" v-for="(item, index) in ['男生', '女生']" :key="index">{{item}}</div>
 			<div class="border" :style="{left: 32 * (2 * navActive + 1) + 'px'}"></div>
@@ -55,7 +55,7 @@
 		components: {
 			Carousel,
 			Book,
-			YSearch
+			Search: YSearch
 		},
 		data() {
 			return {
