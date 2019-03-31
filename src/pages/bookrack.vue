@@ -93,6 +93,9 @@
 			showOperation (i) {
 				console.log(i)
 				this.$set(this.bookList[i], 'showOperation', !this.bookList[i].showOperation)
+			},
+			getData () {
+
 			}
 		}
 	}

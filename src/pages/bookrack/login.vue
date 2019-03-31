@@ -20,6 +20,7 @@
         <button class="login">登陆</button>
       </div>
     </div>
+	  <van-toast id="van-toast"/>
 		<div class="extra">
 			<p class="t-a-c f-11 c-6">其他登陆方式</p>
 			<div class="f-align">
@@ -42,7 +43,8 @@
     "backgroundColor": "#eeeeee",
     "backgroundTextStyle": "light",
     "usingComponents": {
-      "van-field": "/vant/field/index"
+      "van-field": "/vant/field/index",
+			"van-toast": "/vant/toast/index"
     }
   }
 </config>
@@ -59,7 +61,7 @@ export default {
     }
   },
 	created () {
-		Megalo.getSetting().then(res => console.log(res))
+		// Megalo.getSetting().then(res => console.log(res))
 	},
   methods:{
 	  getUserInfo(e) {
@@ -70,6 +72,17 @@ export default {
 					userInfo: info.userInfo
 			  }).then(res => {
 				  console.log(res, info)
+				  if (res.status === 200) {
+            Megalo.setStorage({
+              key: 'authorization',
+              data: res.data.token
+            })
+					  this.$toast('登陆成功')
+            Megalo.switchTab({
+	            url: '/pages/bookrack'
+            })
+				  }
+
 			  })
 		  }))
 	  }

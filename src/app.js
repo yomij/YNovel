@@ -4,10 +4,12 @@ import api from '@/api'
 import VHtmlPlugin from '@megalo/vhtml-plugin'
 import megaloRouter  from 'megalo-router'
 
+import Toast from '@/static/vant/toast/toast';
+
 Vue.use(megaloRouter, {
 	mode: 'strict', // strict or loose 可配置项，不配置的话默认为strict
 	tabBars: [ // 必须配置项
-    'pages/bookrack/login',
+    // 'pages/bookrack/login',
 		'pages/bookrack',
 		'pages/bookStore',
 		'pages/recommend'
@@ -16,6 +18,8 @@ Vue.use(megaloRouter, {
 
 Vue.use(VHtmlPlugin)
 Vue.prototype.$api = api
+Vue.prototype.$toast = Toast
+
 
 const app = new Vue(App)
 
@@ -63,6 +67,10 @@ export default {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'Yomi',
       navigationBarTextStyle: 'white'
-    }
+    },
+		"usingComponents": {
+			"van-search": "/vant/search/index",
+			"van-toast": "/vant/toast/index"
+		}
   }
 }
