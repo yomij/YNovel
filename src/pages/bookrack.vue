@@ -2,10 +2,10 @@
 	<div class="bookrack">
 		<div class="user f-align-l">
 			<div class="f-g-1 f-align-l"  @click="login">
-				<img :src="avatarDefault"/>请登录
+				<img :src="userInfo.avatarUrl"/>{{userInfo ? userInfo.nickname :'请登录'}}
 			</div>
 			<div class="bind">
-				<button>绑定手机号</button>
+				<button v-if="!userInfo.phone">绑定手机号</button>
 			</div>
 		</div>
 		<div class="subscription">
@@ -47,7 +47,8 @@
 			return {
 				avatarDefault: avatar,
 				iconMore,
-				bookList: []
+				bookList: [],
+				userInfo: null
 			}
 		},
 		created() {
@@ -72,9 +73,9 @@
 		},
 		onShow: function() {
 			// Do something when page show.
-			wx.login({
-				success(res) {
-					console.log(res)
+			this.$api.getUserInfo().then(res => {
+				if (res.status === 200) {
+					this.userInfo = res.data
 				}
 			})
 			console.log('Page [hello] onShow')
@@ -93,6 +94,9 @@
 			showOperation (i) {
 				console.log(i)
 				this.$set(this.bookList[i], 'showOperation', !this.bookList[i].showOperation)
+			},
+			getData () {
+
 			}
 		}
 	}

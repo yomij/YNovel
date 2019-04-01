@@ -12,7 +12,14 @@ const getColor = (params) => req({
 	params
 })
 
+const getUserInfo = (params) => req({
+	url: '/api/user',
+	method: 'get',
+	params
+})
+
 export default {
   loginWx,
-	getColor
+	getColor,
+	getUserInfo
 }
