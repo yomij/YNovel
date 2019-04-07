@@ -1,15 +1,27 @@
 <template>
-	<div class="reading">
+	<div class="reading" v-if="chapter">
 		<nav class="nav f-align-l" :style="{'padding-top': statusBarHeight + 'px', background: status.navBg, color: status.navColor }">
-			<i class=" back iconfont icon-weixin" @click="$router.go(-1)"></i>{{'一只狗的一生'}}
+			<i class=" back iconfont icon-weixin" @click="$router.go(-1)"></i>{{chapter.title}}
 		</nav>
 		<section class="content" :style="{background: status.bg, color: status.color, fontSize: mainFontSize + 'rpx'}" @longpress="handleLongpress" @tap="hideOperation">
-			<h1>第一章 困的一的YOMI</h1>
-			<div class="text">
-				<p>2017年11月10日，2017全球未来出行高层论坛暨国际展览会在杭州国际博览中心拉开帷幕。开幕当天，帝亚一维新能源汽车有限公司（下称“帝亚一维”）正式发布了公司旗下首款电动汽车的Beta版。</p>
-				<p>蒂亚一维这个名字初听有些陌生，这家年轻的新能源汽车公司在今年2月刚刚注册成立。仅仅9个月时间就推出了首款产品。</p>
-				<p>帝亚一维新能源汽车有限公司由江苏悦达创业投资有限公司、IDG资本、北京联动天翼科技股份公司、阿尔特汽车技术股份有限公司以及自然人股东，共同出资成立的以纯电动汽车的研发、制造、营销为一体的高新技术企业，由汽车业内多名资深人士组建团队。</p>
-				<p>不同于当下新能源汽车企业高管多有互联网企业背景的现状，蒂亚一维的核心团队均来自传统汽车制造业。公司总裁何坤，曾先后任职广汽长丰汽车有限公司副总经理，明君汽车产业股份有限公司总裁；副总裁王敦明，曾先后任职于东风汽车公司销售部总经理助理、东风悦达起亚销售本部副本部长；副总裁：蔡峰，海南一汽海马汽车销售有限公司总经理。</p>
+			<ul class="f-align opeartion van-hairline--surround">
+				<li class="f-align"><i class="iconfont icon-weixin"></i>上一章</li>
+				<li class="f-align border"><i class="iconfont icon-weixin"></i>目录</li>
+				<li class="f-align">下一章<i class="iconfont icon-weixin"></i></li>
+			</ul>
+
+			<h1>{{chapter.title}}</h1>
+			<div  class="text">
+				<p v-html="chapter.content"></p>
+			</div>
+			<div class="comment-box" :style="{background: status.operationBg, color: status.color}">
+				<Comment :imgSize="60"/>
+				<a class="comment-a">去评论</a>
+				<ul class="f-align opeartion van-hairline--surround mtb-20">
+					<li class="f-align"><i class="iconfont icon-weixin"></i>上一章</li>
+					<li class="f-align border"><i class="iconfont icon-weixin"></i>目录</li>
+					<li class="f-align">下一章<i class="iconfont icon-weixin"></i></li>
+				</ul>
 			</div>
 		</section>
 		<van-popup
@@ -31,7 +43,7 @@
 		</van-popup>
 		<footer v-show="operationShow" :style="{background: status.operationBg, color: status.color}">
 			<div>
-				<h2 class="f-align">第一章 困的一的YOMI</h2>
+				<h2 class="f-align">{{chapter.title}}</h2>
 				<div class="f-align">
 					<i class=" pre iconfont icon-weixin" @click="nowCount--"></i>
 					<van-slider class="f-g-1" use-button-slot :inactive-color="status.barBg" :active-color="status.activeBarBg" :min="0" :value="(nowCount / total.toFixed(2) * 100)" @change="sectionChange">
@@ -81,7 +93,8 @@
 
 <script>
 	import LoadSection from '@/components/LoadSection.vue'
-	
+  import Comment from '@/components/Comment.vue'
+
 	const config = {
 		minFontSize: 18,
 		fontSize: 36,
@@ -90,10 +103,12 @@
 	
 	export default {
 		components: {
-			LoadSection
+			LoadSection,
+      Comment
 		},
 		data() {
 			return {
+			  chapter: null,
 				status: {
 					navBg: '#f7f8fc',
 					navColor: '#000',
@@ -162,14 +177,25 @@
 					}],
 			}
 		},
-		created() {
+		beforeCreate() {
+      Megalo.getSystemInfo().then(res => {
+        console.log(res)
+        this.statusBarHeight = res.statusBarHeight
+      })
+      Megalo.getScreenBrightness().then(res => this.brightness = res.value)
+		},
+		async created() {
 			// var appInstance = getApp()
 			// console.log(appInstance.globalData.then()) // I am global data
-			Megalo.getSystemInfo().then(res => {
-				console.log(res)
-				this.statusBarHeight = res.statusBarHeight
-			})
-			Megalo.getScreenBrightness().then(res => this.brightness = res.value)
+			console.log('this.router.query', this.$route.query)
+			const res = await this.$api.getChapter({chapterId: this.$route.query.chapterId})
+			if (res.status === 200) {
+				this.chapter = res.data
+        setTimeout(() => Megalo.pageScrollTo({
+          scrollTop: 78
+        }), 300)
+			}
+
 		},
 		methods:{
 			catalogue () {
@@ -261,18 +287,21 @@
 		padding-top: 90px;
 	}
 	.content {
+		padding-top: 20px;
 		position: relative;
 		h1 {
 			padding: 38px 20px 26px;
 			font-size: 23px;
 			line-height: 100%;
 		}
-		p {
-			line-height: 33px;
-			text-indent: 36px;
-		}
+
 		.text {
-			padding: 0 30px;
+			padding: 0  30px 50px;
+			p {
+				line-height: 33px;
+				text-indent: 36px;
+			}
+
 		}
 		color: #404040;
 	}
@@ -335,6 +364,36 @@
 		}
 	}
 
+
+	.opeartion {
+		height: 40px;
+		border-radius: 3px;
+		width: 90%;
+		margin: 0 auto;
+		box-shadow:  0 0 15px rgba(57, 74, 113, 0.02);
+		li {
+			width: 33%;
+			font-size: 12px;
+			height: 20px;
+			i {
+				margin:0 2px;
+			}
+			&.border {
+				border-left: 1px solid rgba(153, 153, 153, 0.32);
+				border-right: 1px solid rgba(153, 153, 153, 0.32);
+			}
+		}
+	}
+	.comment-box {
+		border-radius: 8px 8px 0 0;
+		padding: 0 21px 10px 30px;
+		min-height: 50px;
+		box-shadow:  8px 0 10px rgba(57, 74, 113, 0.05);
+		.commit {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
 	footer {
 		height: 142px;
 		position: fixed;
@@ -372,5 +431,16 @@
 			font-size: 9px;
 			width: 33.3%;
 		}
+	}
+
+	.mtb-20 {
+		margin: 20px auto;
+	}
+</style>
+
+<style>
+	.octoParse-p {
+		line-height: 33px;
+		text-indent: 36px;
 	}
 </style>

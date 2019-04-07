@@ -1,15 +1,15 @@
 <template>
 	<scroll-view :style="{color: color[0], background: color[1]}" scroll-y class="section-list" @scroll="sectionScroll">
 		<h2 class="title" :class="{'van-hairline--bottom': !noBorder}">正文卷</h2>
-		<div class="section-y section" :class="{'van-hairline--bottom': !noBorder}" v-for="(item, index) in sectionList" :key="index">
+		<div @click="toRead(item)" class="section-y section" :class="{'van-hairline--bottom': !noBorder}" v-for="(item, index) in sectionList" :key="index">
 			<p>{{item.title}}</p>
-			<p>{{item.time}}</p>
+			<p>{{$utils.formatDate('yyyy-MM-dd hh:mm:ss', new Date(item.createTime))}}</p>
 		</div>
 	</scroll-view>
 </template>
 
 <script>
-	export default {
+  export default {
 		name: 'loading',
 		props: {
 			sectionList: {
@@ -57,7 +57,10 @@
 					this.isLoading = true
 					this.$emit('loading')
 				}
-			}
+			},
+      toRead(chapter) {
+			  this.$router.push({path: '/pages/readPage/index', query: {chapterId: chapter._id}})
+      }
 		},
 		watch: {
 			sectionList(v) {

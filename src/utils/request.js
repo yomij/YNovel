@@ -16,7 +16,7 @@ const BASE_URL = 'http://localhost:3100'
 
 const request = options => {
   let header =  { 'Content-Type': 'application/json;charset=utf-8' }
-  let {method = 'get', url, resType = 'json', data, needToken = true} = options
+  let {method = 'get', url, resType = 'json', data, params, needToken = true} = options
   const token = Megalo.getStorageSync('authorization')
   if (!url) {
     console.log('Request Without Url')
@@ -35,7 +35,7 @@ const request = options => {
       header,
       method: method.toLocaleUpperCase(),
       dataType: resType,
-      data
+      data: data || params
     }).then(res => {
       if (res.statusCode === 401) {
         return megaloRouter.replace('/pages/bookrack/login')

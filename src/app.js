@@ -5,6 +5,7 @@ import VHtmlPlugin from '@megalo/vhtml-plugin'
 import megaloRouter  from 'megalo-router'
 
 import Toast from '@/static/vant/toast/toast';
+import formatDate from '@/utils/formatDate'
 
 Vue.use(megaloRouter, {
 	mode: 'strict', // strict or loose 可配置项，不配置的话默认为strict
@@ -19,7 +20,9 @@ Vue.use(megaloRouter, {
 Vue.use(VHtmlPlugin)
 Vue.prototype.$api = api
 Vue.prototype.$toast = Toast
-
+Vue.prototype.$utils = {
+	formatDate
+}
 
 const app = new Vue(App)
 
@@ -29,14 +32,16 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-	    'pages/bookrack/login',
+
+	    // 'pages/bookrack/login',
 	    'pages/bookDetail/index',
 	    'pages/bookStore',
-	    'pages/readPage/index',
+			'pages/readPage/index',
+	    // 'pages/readPage/index',
 			'pages/searchResult/index',
 	    'pages/recommend',
 			'pages/bookrack',
-			// 'pages/bookrack/login',
+			'pages/bookrack/login',
     ],
     tabBar: {
       color: '#333',
