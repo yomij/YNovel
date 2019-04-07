@@ -25,7 +25,7 @@ const request = options => {
   console.log(needToken, token)
   if (needToken && token) {
     header = Object.assign(header, {
-      token
+      authorization: `Bearer ${token}`,
     })
   }
   // url = params ? `${url}?${qs.stringify(params)}` : url

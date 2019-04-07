@@ -12,6 +12,12 @@ const getColor = (params) => req({
 	params
 })
 
+const getUserInfo = (params) => req({
+	url: '/api/user',
+	method: 'get',
+	params
+})
+
 const getBook = (params) => {
   console.log(params)
   return req({
@@ -40,6 +46,7 @@ const getChapterList = (params) => {
 export default {
   loginWx,
 	getColor,
+	getUserInfo,
   getBook,
   getChapter,
   getChapterList

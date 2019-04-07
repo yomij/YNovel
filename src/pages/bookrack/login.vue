@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-
+			userInfo: null
     }
   },
 	created () {
@@ -71,8 +71,8 @@ export default {
 				  code: res.code,
 					userInfo: info.userInfo
 			  }).then(res => {
-				  console.log(res, info)
 				  if (res.status === 200) {
+				  	console.log(res.data.token)
             Megalo.setStorage({
               key: 'authorization',
               data: res.data.token
@@ -82,7 +82,6 @@ export default {
 	            url: '/pages/bookrack'
             })
 				  }
-
 			  })
 		  }))
 	  }
