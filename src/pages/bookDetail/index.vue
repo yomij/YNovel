@@ -73,7 +73,7 @@
 				分享给好友
 			</button>
 			<div class="f-align-l btn">
-				<button>加入书架</button>
+				<button @click="subscription">加入书架</button>
 				<button @click="$router.push({path: '/pages/readPage/index', query: {chapterId: sectionList[0]._id}})">立即阅读</button>
 			</div>
 		</footer>
@@ -103,16 +103,18 @@
 				showArticle: false,
 				descShow: false,
 				statusBarHeight: 20,
-        totalCount: Infinity,
-				desc: ''
+				desc: '',
+				pageNo: 1,
+				pageSize: 20,
+				totalCount: Infinity,
 			}
 		},
 		created () {
 		  this.$api.getBook({
-			  bookId: this.$route.query.bookId || '5ca8a3d40e23761aa0bfe49f'
+			  bookId: '5cb431b207c19887f40118fc' || this.$route.query.bookId || '5cac3120ca1b724f18f309a8'
 		  }).then(res => {
 		    console.log({
-          bookId: this.$route.query.bookId || '5ca8a3d40e23761aa0bfe49f'
+          bookId: '5cb431b207c19887f40118fc' || this.$route.query.bookId || '5cac3120ca1b724f18f309a8'
         })
 			  this.book = res.data.book
 			  this.firstChapter = res.data.firstChapter
@@ -120,8 +122,8 @@
 			  console.log(this.book,this.firstChapter,this.colors)
 			  return this.$api.getChapterList({
 				  bookId:this.book._id,
-				  pageNo: 1,
-				  pageSize: 20
+				  pageNo: this.pageNo,
+				  pageSize: this.pageSize
 			  })
 		  }).then(res => {
 		    this.sectionList = res.data.chapterList
@@ -168,7 +170,15 @@
 				this.listShow = true
 			},
 			loading () {
-				console.log('loading')
+				if (this.totalCount < this.pageSize * this.pageNo) return
+				this.pageNo += 1
+				this.$api.getChapterList({
+					bookId:this.book._id,
+					pageNo: this.pageNo,
+					pageSize: this.pageSize
+				}).then(res => {
+					console.log('load', res)
+				})
 				this.sectionList.push(...[{
 					title: 'aaa',
 					time: 'aaa'
@@ -198,6 +208,9 @@
 					time: 'aaa'
 				}])
 				this.sectionList.splice()
+			},
+			subscription () {
+				this.$api.subscription({}).then(res => console.log('subscription'))
 			}
 		}
 	}

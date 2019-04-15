@@ -43,11 +43,20 @@ const getChapterList = (params) => {
   })
 }
 
+const subscription = data => {
+	return req({
+		url: '/api/book/subscription',
+		method: 'get',
+		data
+	})
+}
+
 export default {
   loginWx,
 	getColor,
 	getUserInfo,
   getBook,
   getChapter,
-  getChapterList
+  getChapterList,
+	subscription
 }

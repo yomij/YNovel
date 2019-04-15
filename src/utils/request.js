@@ -1,6 +1,6 @@
 import megaloRouter  from 'megalo-router'
+// const BASE_URL = 'https://www.yomij.cn'
 const BASE_URL = 'http://localhost:3100'
-// const BASE_URL = 'http://23s7k31667.imwork.net:38560'
 /**
  * @Description 请求方法
  * @Param options {

@@ -1,10 +1,12 @@
 <template>
-	<nav class="f-s-b">
-		<i></i>
-		<p>发布</p>
-	</nav>
-	<div class="comment-page">
-		<textarea placeholder="这是一个可以自动聚焦的textarea" auto-focus />
+	<div>
+		<nav class="f-s-b">
+			<i></i>
+			<p>发布</p>
+		</nav>
+		<div class="comment-page">
+			<textarea placeholder="这是一个可以自动聚焦的textarea" auto-focus />
+		</div>
 	</div>
 </template>
 
