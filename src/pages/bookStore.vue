@@ -1,32 +1,32 @@
 <template>
 	<div class="book-store">
 		<div class="f-align-l search" @click="searchShow = true">
-			<i class="iconfont icon-yonghu"></i>
-			<p>{{'aaa'}}</p>
+			<i class="iconfont icon-sousuo"></i>
+			<p>{{'搜索'}}</p>
 		</div>
 		<Search @transShow="searchShow = false" :show="searchShow"/>
 		<nav class="f-align-l">
-			<div class="item" @click="navActive = index" v-for="(item, index) in ['男生', '女生']" :key="index">{{item}}</div>
+			<div class="item" @click="changeTab(index)" v-for="(item, index) in ['男生', '女生']" :key="index">{{item}}</div>
 			<div class="border" :style="{left: 32 * (2 * navActive + 1) + 'px'}"></div>
 		</nav>
 		<article class="main">
 			<section>
-				<h2>24小时点击</h2>
-				<Carousel :list="topList"/>
+				<h2>最热</h2>
+				<Carousel :list="hottest"/>
 				<div class="book-list f-s-b">
-					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
-				</div>
-			</section>
-			<section>
-				<h2></h2>
-				<div class="book-list f-s-b">
-					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in hotList"/>
 				</div>
 			</section>
 			<section>
 				<h2>24小时点击</h2>
 				<div class="book-list f-s-b">
 					<Book class="book" :book="book" :key="index" v-for="(book, index) in topList"/>
+				</div>
+			</section>
+			<section>
+				<h2>24小时订阅</h2>
+				<div class="book-list f-s-b">
+					<Book class="book" :book="book" :key="index" v-for="(book, index) in subList"/>
 				</div>
 			</section>
 		</article>
@@ -61,59 +61,24 @@
 			return {
 				navActive: 0,
 				searchShow: false,
-				topList: [{
-					title: '吃葡萄',
-					author: '有米',
-					mainImg:'http://hbimg.b0.upaiyun.com/75cdb7cfd53c1eeead7f5333e673e9e669e456d5752e-RNtNWd_fw658'
-				},{
-					title: '吃葡萄皮',
-					author: '番茄',
-					mainImg: 'http://img1.imgtn.bdimg.com/it/u=3364060647,1821019892&fm=26&gp=0.jpg'
-				},{
-					title: '吃葡萄不吐葡萄皮',
-					author: '土豆',
-					mainImg:'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'
-				}, {
-					title: '吃葡萄不吐葡萄皮',
-					author: 'yomi',
-					mainImg:'http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg'
-				}]
+				hottest: [],
+        hotList: [],
+				topList: [],
+				subList: []
 			}
 		},
 		beforeCreate() {
 			console.log('Page [hello] Vue beforeCreate')
 		},
 		created() {
-			setTimeout(() => {
-
-			})
-		},
-		beforeMount() {
-			console.log('Page [hello] Vue beforeMount')
-		},
-		mounted() {
-			console.log('Page [hello] Vue mounted')
-		},
-		onLoad: function(options) {
-			// Do some initialize when page load.
-			console.log('Page [hello] onLoad')
-		},
-		onReady: function() {
-			// Do something when page ready.
-			console.log('Page [hello] onReady')
-		},
-		onShow: function() {
-			// Do something when page show.
-
+      this.getData(1)
 		},
 		onHide: function() {
-			// Do something when page hide.
-			console.log('Page [hello] onHide')
+      this.$utils.bev.uploadBev()
 		},
-		onUnload: function() {
-			// Do something when page close.
-			console.log('Page [hello] onUnload')
-		},
+		// onUnload: function() {
+    //   this.$utils.bev.uploadBev()
+		// },
 		/**
 		 * for other event handlers, please check https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
 		 */
@@ -121,6 +86,22 @@
 			changeStat: function(){
 				this.t++
 				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
+			},
+			changeTab (index){
+        this.navActive = index
+				this.getData(~~!index)
+			},
+			getData(tag = 1) {
+        this.$api.mianPage({
+          tag
+        }).then(res => {
+          console.log(res)
+          const h = res.data.hottest
+          this.hottest = h.splice(0, 3)
+          this.hotList = h
+          this.topList = res.data.mostClicked
+	        this.subList = res.data.mostSubscription
+        })
 			}
 		}
 	}
@@ -129,6 +110,7 @@
 <style lang="scss" scoped>
 	.book-store {
 		padding-top: 11px;
+		padding-bottom: 20px;
 	}
 	.search {
 		width: 91.67%;

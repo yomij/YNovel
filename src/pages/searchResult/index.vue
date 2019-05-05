@@ -5,16 +5,16 @@
 			<span class="c-b" @click="onCancel">取消</span>
 		</div>
 		<div class="container">
-			<div class="f-align-l base van-hairline--bottom">
-				<img src="http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg"/>
+			<div class="f-align-l base van-hairline--bottom" :key="index" @click="toDetail(item)" v-if="searchResult.length" v-for="(item, index) in searchResult">
+				<img :src="item.mainImg.url"/>
 				<div class="f-g-1">
-					<p class="title">圣墟</p>
-					<p class="extra">辰东<span class="dot"></span>玄幻<span class="dot"></span>连载<span class="dot"></span>104万字</p>
-					<p class="desc">覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹</p>
+					<p class="title" ><span v-html="item.title"></span></p>
+					<p class="extra"><span v-html="item.author"></span><span class="dot"></span>{{item.mainTag}}<span class="dot"></span>{{item.status ? '连载' : '完结'}}<span class="dot"></span>{{(item.totalCount/ 10000).toFixed(0)}}万字</p>
+					<p class="desc">{{item.description}}</p>
 				</div>
 			</div>
 		</div>
-		<p class="no-more">( ´◔ ‸◔`) &nbsp; 没有更多啦</p>
+		<p class="no-more">( ´◔ ‸◔`) &nbsp; {{searchResult.length ? '没有更多啦' : '没有找到相关内容'}}</p>
 	</div>
 </template>
 
@@ -24,12 +24,13 @@
 			return {
 				resultShow: true,
 				searchHistory: [],
-				searchText: ''
+				searchText: '',
+				searchResult: []
 			}
 		},
 		created () {
 			this.searchText = this.$route.query.search
-			console.log(this.$route.query)
+			this.search(this.searchText)
 		},
 		methods: {
 			showResult() {
@@ -49,8 +50,7 @@
 				})
 			},
 			onCancel() {
-				console.log('aaa')
-				this.$emit('transShow', false)
+				this.$router.reLaunch({path: '/pages/bookStore'})
 			},
 			onBlur() {
 				this.resultShow = false
@@ -59,8 +59,29 @@
 				this.resultShow = true
 			},
 			onSearch(e) {
-				console.log(e)
-			}
+				console.log(e.detail)
+				this.search(e.detail)
+			},
+			search(text) {
+			  this.$api.search({search: text}).then(res => {
+			    if (res.status === 200) {
+			      let {result} = res.data
+				    result = result.map(item => {
+				      item.author = item.author.replace(this.searchText, `<span style='color:#f56366'>${this.searchText}</span>`)
+              item.title = item.title.replace(this.searchText, `<span style='color:#f56366'>${this.searchText}</span>`)
+				      return item
+				    })
+				    console.log(result)
+				    this.searchResult = result
+			    } else {
+			      this.$toast.fail('搜索失败')
+			    }
+			  })
+			},
+      toDetail (item) {
+			  const id = item._id
+	      this.$router.push('/pages/bookDetail/index?bookId=' + id)
+      }
 		},
 		watch: {
 			resultShow(val) {
@@ -75,7 +96,7 @@
 <style lang="scss" scoped>
 	.search-box {
 		font-size: 15px;
-		padding: 0 16px 0 6px
+		padding: 0 16px 0 6px;
 	}
 	.container {
 		padding: 0 16px;
@@ -85,14 +106,14 @@
 		padding: 15px 0;
 		.title {
 			font-size: 16px;
-			color: #f56366;
+			color: #222;
 			margin-bottom: 3px;
 			line-height: 100%;
 		}
 		.extra {
 			font-size: 14px;
 			color: #999;
-			line-height: 100%;
+			line-height: 130%;
 			margin: 8px 0;
 		}
 		.desc {

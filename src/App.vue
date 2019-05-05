@@ -17,9 +17,10 @@
       console.log('App onError')
       console.log(msg)
     },
-    async globalData() {
+    globalData() {
       return {
-      	barHeight: await Megalo.getSystemInfo()
+      	test: '',
+        bookList: []
       }
     }
   }

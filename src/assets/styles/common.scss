@@ -49,6 +49,14 @@
 .radius {
   border-radius: 50%;
 }
+
+.relative {
+  position: relative;
+}
+.z-i-20 {
+  z-index: 20;
+}
+
 //字体类
 .f-18 {
  font-size: 18px !important;
@@ -98,6 +106,9 @@
 }
 .c-b {
   color: #7b90cf;
+}
+.c-r {
+  color: #ec383c;
 }
 
 .t-a-c {

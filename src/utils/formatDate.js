@@ -1,4 +1,7 @@
 export default function (fmt, date) {
+  if (typeof date === 'string' || typeof data === 'number') {
+    date = new Date(date)
+  }
   const o = {
     "M+": date.getMonth() + 1,                 //月份
     "d+": date.getDate(),                    //日

@@ -1,26 +1,30 @@
 <template>
 	<div class="recommend">
 		<!--<Ysearch />-->
-		<div class="f-align-l search">
+		<van-toast id="van-toast"/>
+		<Search @transShow="searchShow = false" :show="searchShow"/>
+		<div class="f-align-l search" @click="searchShow = true">
 			<i class="iconfont icon-yonghu"></i>
-			<p>{{'aaa'}}</p>
+			<p>{{'搜索'}}</p>
 		</div>
 		<div class="main">
-			<article class="book-box">
+			<article class="book-box" v-for="(book, index) in bookList" @click="$router.push('/pages/bookDetail/index?bookId=' + book._id)">
 				<div class="f-align-l base">
-					<img src="http://pic1.win4000.com/mobile/2018-12-10/5c0e13e2e923a.jpg"/>
+					<img :src="book.mainImg.url"/>
 					<div claass="info">
-						<p class="title">圣墟</p>
-						<p>辰东<span class="dot"></span>玄幻</p>
-						<p>连载<span class="dot"></span>200万字<span class="dot"></span>评分8.9</p>
+						<p class="title">{{book.title}}</p>
+						<p>{{book.author}}<span class="dot"></span>{{book.mainTag}}</p>
+						<p>{{book.status ? '完结' : '连载'}}<span class="dot"></span>{{(book.totalCount / 10000).toFixed(0)}}万字<span class="dot"></span>评分{{book.gradeCount > 10 ? (book.gradeTotal / book.gradeCount).toFixed(2) : '4.5' }}</p>
 					</div>
 				</div>
-				<p class="introduce">覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己俺爸爸加丹加骄傲覅就算是激发就安分守己</p>
-				<p class="reason">-&nbsp;根据你看过的xxx推荐&nbsp;-</p>
+				<p class="introduce">{{book.description ? book.description : '这本书需要自己去探索哦'}}</p>
+				<p class="reason">-&nbsp;推荐&nbsp;-</p>
 				<div class="operation f-align">
-					<i class="iconfont icon-yonghu"></i>
-					<i class="iconfont icon-yonghu"></i>
-					<button>立即阅读</button>
+					<button class="share f-dir-column f-10 c-9 t-a-c" @click.stop="choose(book)" open-type='share'>
+						<i class="iconfont icon-fenxiang"></i>
+					</button>
+					<i class="iconfont icon-iconfontzhizuobiaozhun023108" :class="{'c-9': book.isSub}"  @click.stop="subscription(book, index)"></i>
+					<button class="read" @click.stop="toRead(book)">立即阅读</button>
 				</div>
 			</article>
 		</div>
@@ -32,7 +36,7 @@
 	{
 	"navigationBarBackgroundColor": "#ffffff",
 	"navigationBarTextStyle": "black",
-	"navigationBarTitleText": "快捷登录",
+	"navigationBarTitleText": "推荐",
 	"backgroundColor": "#eeeeee",
 	"backgroundTextStyle": "light",
 	"usingComponents": {
@@ -45,22 +49,26 @@
 	import Ysearch from '@/components/Ysearch.vue'
 	export default {
 		components: {
-			Ysearch
+			Search: Ysearch
 		},
 		data() {
 			return {
-				logo: 'https://user-images.githubusercontent.com/20720117/48262986-80e02780-e45f-11e8-8426-2872916adad9.png',
-				t: 1,
-				color: '#007d37'
+			  bookList: [],
+				chooseBook: {}.constructor,
+        searchShow: false,
 			}
 		},
 		beforeCreate() {
 			console.log('Page [hello] Vue beforeCreate')
 		},
 		created() {
-			console.log('Page [hello] Vue created')
-			var appInstance = getApp()
-			console.log(appInstance.globalData) // I am global data
+			// console.log('Page [hello] Vue created')
+			// var appInstance = getApp()
+			// console.log(appInstance.globalData) // I am global data
+			this.$api.recommend().then(res => {
+			  console.log(res)
+				this.bookList = res.data.books
+			})
 		},
 		beforeMount() {
 			console.log('Page [hello] Vue beforeMount')
@@ -72,31 +80,67 @@
 			// Do some initialize when page load.
 			console.log('Page [hello] onLoad')
 		},
-		onShow: function() {
-			// Do something when page show.
-			wx.login({
-				success(res) {
-					console.log(res)
-				}
-			})
-			console.log('Page [hello] onShow')
-		},
-		onHide: function() {
+		// onShow: function() {
+		// 	// Do something when page show.
+		// 	wx.login({
+		// 		success(res) {
+		// 			console.log(res)
+		// 		}
+		// 	})
+		// 	console.log('Page [hello] onShow')
+		// },
+		destroyed: function() {
 			// Do something when page hide.
-			console.log('Page [hello] onHide')
+			this.$utils.bev.uploadBev()
 		},
-		onUnload: function() {
-			// Do something when page close.
-			console.log('Page [hello] onUnload')
-		},
-		/**
-		 * for other event handlers, please check https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
-		 */
+    onShareAppMessage (id) {
+    setTimeout(() =>   this.$utils.bev.addbev(this.chooseBook._id, 4, 1), 0)
+      return {
+        title: this.chooseBook.title,
+        path: '/pages/bookDetail/index?bookId=' + id,
+        success(res) {
+          console.log('成功', res)
+        },
+        fail(res) {
+          console.log('失败', res)
+        }
+      }
+    },
 		methods:{
-			changeStat: function(){
-				this.t++
-				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
-			}
+			// changeStat: function(){
+			// 	this.t++
+			// 	this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
+			// },
+      choose(book) {
+			  this.chooseBook = book
+	      console.log(this.chooseBook)
+      },
+      toRead (book) {
+        this.$router.push({path: '/pages/readPage/index',
+          query: {
+            chapterId: book._id + '0',
+            title: book.title,
+            bookId: book._id,
+            mainImg: encodeURIComponent(book.mainImg.url),
+            author: book.author,
+            isSub: book.isSub
+          }
+        })
+      },
+      subscription (book, i) {
+        if(book.isSub) return
+        this.$api.subscription({
+          bookId: book._id
+        }).then(res => {
+          if(res.status === 200) {
+            book.isSub= true
+            this.$set(this.bookList, i, book)
+	          this.$toast.success('加入书架成功')
+          } else {
+            this.$toast.fail(res.message)
+          }
+        })
+      }
 		}
 	}
 </script>
@@ -134,6 +178,7 @@
 			height: 41px;
 			text-overflow: ellipsis;
 			word-break: break-word;
+			overflow: hidden;
 		}
 		.dot {
 			display: inline-block;
@@ -144,18 +189,19 @@
 			margin: 0 10px;
 		}
 		.operation {
+			justify-items: center;
+			align-items: center;
 			margin-top: 35px;
 			padding-left: 6px;
 			i {
 				margin-right: 38px;
 				color: #333;
 			}
-			button {
+			button.read {
 				width: 154px;
 				height: 36px;
-				margin-left: 15px;
 				padding: 0 13px;
-				font-size: 12px;
+				font-size: 16px;
 				line-height: 36px;
 				border-radius: 30px;
 				color: #fff;
@@ -185,6 +231,23 @@
 		i {
 			padding-right: 10px;
 			color: #868c98;
+		}
+	}
+
+	.share {
+		outline: none;
+		background: none;
+		border: none;
+		box-shadow: none;
+		height: 34px;
+		line-height: 34px;
+		text-align: center;
+		i {
+			font-size: 23px;
+			margin-bottom: 4px;
+		}
+		&:after{
+			border: none;
 		}
 	}
 </style>

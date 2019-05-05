@@ -1,16 +1,16 @@
 <template>
 	<div class="book-detail" v-if="book">
-		<nav class="nav f-align" :class="{show: navShow || listShow}" :style="{'padding-top': statusBarHeight + 'px', 'background-color': colors[2]}">
-			<i class=" back iconfont icon-weixin" @click="$router.go(-1)"></i>{{book.title}}
+		<van-toast id="van-toast"/>
+		<nav class="nav f-align" :class="{show: navShow || listShow}" :style="{'padding-top': statusBarHeight * 2  + 'rpx', 'background-color': colors[2]}">
+			<i class=" back iconfont icon-fanhui" :style="{color: book.mainImg.isDark ? '#fff' : '#555'}" @click="back"></i>{{book.title}}
 		</nav>
-
 		<van-popup
 			class="list"
 			:show="listShow"
 			position="left"
 			@close="listShow = false"
 		>
-			<LoadSection @loading="loading" :sectionList="sectionList"/>
+			<LoadSection @toRead="toRead" @loading="loading" :sectionList="sectionList"/>
 		</van-popup>
 		<scroll-view
 				class="main" id="detail-container"
@@ -18,23 +18,23 @@
 				@scroll="doScroll"
 		>
 			<div class="head-back f-align-l" :style="{'padding-top': statusBarHeight + 'px'}">
-				<i class="iconfont icon-weixin"></i>
+				<i class="iconfont icon-fanhui" :style="{color: book.mainImg.isDark ? '#fff' : '#555'}" @click="back"></i>
 			</div>
 			<!--<div v-for="c in colors" :style="{background: c, height: '50px', width: '50px'}"></div>-->
-			<div class="book-bg" :style="{'background-color': colors[0]}">
+			<div class="book-bg" :style="{'background-color': colors[0], color: book.mainImg.isDark ? '#fff' : '#555'}">
 				<div class="bg"  :style="{'background-image': 'url(' + mainImg + ')', 'background-color': color}"></div>
 				<img :src="book.mainImg.url"/>
 				<p class="title">{{book.title}}</p>
-				<p class="f-12">{{book.author}}<span class="dot"></span>{{book.mainTag}}</p>
+				<p class="f-12">{{book.author}}<span class="dot" :style="{'background-color': book.mainImg.isDark ? '#fff' : '#555'}"></span>{{book.mainTag}}</p>
 				<div class="extra f-align" :style="{'background-color': colors[1]}">
 					<div class="item">
-						<span>{{book.totalCount / 10000}}</span>万字<br/>{{book.status ? '连载' : '完结'}}
+						<span>{{(book.totalCount / 10000).toFixed(0)}}</span>万字<br/>{{book.status ? '连载' : '完结'}}
 					</div>
 					<div class="item">
-						<span>{{book.heat}}</span><br/>热度
+						<span>{{book.heat.toFixed(0)}}</span><br/>热度
 					</div>
 					<div class="item">
-						<span>{{book.score || 9.0}}</span>分<br /> {{book.scoreCount || 1000}}人评价
+						<span>{{book.gradeCount > 10 ? (book.gradeTotal / book.gradeCount).toFixed(2) : '4.5' }}</span>分<br /> {{book.gradeCount > 10 ? book.gradeCount : 10}}人评价
 					</div>
 				</div>
 			</div>
@@ -43,15 +43,13 @@
 				<span><span v-if="book.description.length > 66 && !descShow">...</span><span class="open" @click="descShow = !descShow">{{descShow ? '收起' :  '展开'}}</span></span>
 			</p>
 			<div class="catalogue van-hairline--top-bottom f-s-b">
-				<div class="f-align-l f-18"><i class="iconfont icon-weixin mr-9"></i>目录</div>
-				<p class="latest" @click="showList">昨天12：07更新至第三百七十章猪死了</p>
-				<i class="iconfont icon-weixin f-18"></i>
+				<div class="f-align-l f-18"><i class="iconfont icon-sort mr-9 f-16"></i>目录</div>
+				<p class="latest" @click="showList"><span class="mr-9">{{book.latestUpdate}}</span>{{book.latestUpdateName}}</p>
+				<i class="iconfont icon-youjiantou1 f-18"></i>
 			</div>
 			<section class="comments">
 				<h2>精彩评论</h2>
-				<Comment />
-				<Comment />
-				<Comment />
+				<Comment v-for="(item, index) in commentList" :key="index" :comment="item" :showChapter="true"/>
 			</section>
 			<article class="pre-read" :class="{show: showArticle}">
 				<i class="icon">章节试读</i>
@@ -61,19 +59,19 @@
 					</div>
 					<button class="continue">继续阅读</button>
 					<div v-if="!showArticle" class="show-more">
-						<i @click="showArticle = true" class="iconfont icon-weixin"></i>
+						<i @click="showArticle = true" class="iconfont icon-ico_open"></i>
 					</div>
 				</section>
 			</article>
 		</scroll-view>
 
 		<footer class="f-align-l f-s-b">
-			<button class="share f-dir-column f-10 c-9 t-a-c" open-type='share'>
-				<i class="iconfont icon-weixin"></i>
+			<button class="share f-dir-column f-10 c-9 t-a-c" open-type='share' @click="share">
+				<i class="iconfont icon-fenxiang"></i>
 				分享给好友
 			</button>
 			<div class="f-align-l btn">
-				<button @click="subscription">加入书架</button>
+				<button :class="{subscription: isSubscriptions }" @click="subscription">{{isSubscriptions ? '已在书架' : '加入书架'}}</button>
 				<button @click="$router.push({path: '/pages/readPage/index', query: {chapterId: sectionList[0]._id}})">立即阅读</button>
 			</div>
 		</footer>
@@ -82,6 +80,7 @@
 
 <script>
 	import t from '@/utils/throttle'
+  import dateAgo from '@/utils/dateAgo'
 	import Comment from '@/components/Comment.vue'
 	import LoadSection from '@/components/LoadSection.vue'
 
@@ -97,7 +96,7 @@
 				colors: [],
         firstChapter: null,
 				sectionList: [],
-				listShow: true,
+				listShow: false,
 			  navShow: false,
 				doScroll: null,
 				showArticle: false,
@@ -105,21 +104,33 @@
 				statusBarHeight: 20,
 				desc: '',
 				pageNo: 1,
-				pageSize: 20,
+				pageSize: 50,
 				totalCount: Infinity,
+				isSubscriptions: false,
+				commentList: [],
+				shareTimes: 0
 			}
 		},
 		created () {
+      const token = Megalo.getStorageSync('authorization')
+			const bookId =  this.$route.query.bookId
 		  this.$api.getBook({
-			  bookId: '5cb431b207c19887f40118fc' || this.$route.query.bookId || '5cac3120ca1b724f18f309a8'
+        token,
+			  bookId
 		  }).then(res => {
-		    console.log({
-          bookId: '5cb431b207c19887f40118fc' || this.$route.query.bookId || '5cac3120ca1b724f18f309a8'
-        })
-			  this.book = res.data.book
+			  if (res.status !== 200) return
+			  const book = res.data.book
+			  book.latestUpdate = dateAgo(new Date(book.latestUpdate))
+			  this.book = book
 			  this.firstChapter = res.data.firstChapter
 			  this.colors = this.book.mainImg.colors
-			  console.log(this.book,this.firstChapter,this.colors)
+				this.commentList = res.data.comment.result
+			  // if(getApp().globalData.bookList.some(item => item.book._id === bookId)) {
+			  //   this.isSubscriptions = true
+			  // }
+        this.isSubscriptions = res.data.isSubscription
+			  // 点击
+        this.$utils.bev.addbev(book._id, 1, 1)
 			  return this.$api.getChapterList({
 				  bookId:this.book._id,
 				  pageNo: this.pageNo,
@@ -138,7 +149,7 @@
 				this.statusBarHeight = res.statusBarHeight
 			})
 		},
-		onShow () {
+		onShow() {
 			const query = Megalo.createSelectorQuery();
 			console.log(query)
 			query.select('#detail-container').boundingClientRect()
@@ -148,17 +159,42 @@
 			})
 			this.doScroll = t(this.handleScroll, 50)
 		},
+    onUnload() {
+      if (this.shareTimes) {
+        this.$utils.bev.addbev(this.book._id, 4, this.shareTimes)
+      }
+    },
+		onShareAppMessage (res) {
+      return {
+        title: this.book.title,
+        path: '/pages/bookDetail/index?bookId=' + this.book._id,
+      }
+    },
 		methods:{
-			loginWx() {
-				Megalo.login().then(res => {
-					// Megalo.getUserInfo().then(res => console.log(res))
-					this.$api.loginWx({
-						code: res.code
-					}).then(res => {
-						console.log(res)
-					})
-				})
+		  back() {
+        const scen = wx && wx.getLaunchOptionsSync()
+			  if (scen && scen.scene === 1007) {
+			    this.$router.reLaunch('/pages/bookStore')
+			  } else {
+          this.$router.go(-1)
+			  }
+
+		  },
+			toRead (chapter) {
+        this.$router.push({path: '/pages/readPage/index',
+	        query: {
+            chapterId: chapter._id,
+		        title: this.book.title,
+		        bookId: this.book._id,
+		        mainImg: encodeURIComponent(this.book.mainImg.url),
+		        author: this.book.author,
+		        isSub: this.isSubscriptions
+          }
+        })
 			},
+      share(book) {
+	      this.shareTimes += 1
+      },
 			handleScroll (e) {
 				if (e.detail.scrollTop > 150) {
 					this.navShow = true
@@ -177,40 +213,22 @@
 					pageNo: this.pageNo,
 					pageSize: this.pageSize
 				}).then(res => {
-					console.log('load', res)
+          this.sectionList.push(...res.data.chapterList   )
+					console.log('load', res, this.sectionList)
 				})
-				this.sectionList.push(...[{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				},{
-					title: 'aaa',
-					time: 'aaa'
-				}])
-				this.sectionList.splice()
+
 			},
 			subscription () {
-				this.$api.subscription({}).then(res => console.log('subscription'))
+			  if(this.isSubscriptions) return
+				this.$api.subscription({
+					bookId: this.book._id
+				}).then(res => {
+				  if(res.status === 200) {
+            this.isSubscriptions = true
+				  } else {
+				    this.$toast.fail(res.message)
+				  }
+				})
 			}
 		}
 	}
@@ -296,7 +314,6 @@
 		-webkit-background-size: 100%;
 		background-size: 100%;
 		padding-top: 54px;
-		color: #fff;
 		text-align: center;
 		overflow: hidden;
 		.bg {
@@ -315,7 +332,7 @@
 			display: inline-block;
 			height: 4px;
 			width: 4px;
-			background-color: #777;
+			/*background-color: #777;*/
 			border-radius: 5px;
 			margin: 0 10px;
 		}
@@ -410,6 +427,7 @@
 		h3 {
 			font-size: 21px;
 			line-height: 48px;
+			margin-top: 5px;
 		}
 		p {
 			text-indent: 30px;
@@ -445,7 +463,7 @@
 			text-align: center;
 			padding-top: 100px;
 			i {
-				font-size: 25px;
+				font-size: 16px;
 				color: #3c3f46;
 			}
 		}
@@ -469,6 +487,10 @@
 			box-shadow: none;
 			height: 34px;
 			line-height: 1;
+			i {
+				font-size: 16px;
+				margin-bottom: 4px;
+			}
 			&:after{
 				border: none;
 			}
@@ -490,6 +512,10 @@
 					background: #f95c53;
 					color: #fff;
 				}
+			}
+			.subscription {
+				background: #d9d9d9 !important;
+				color: #4a5369 !important;
 			}
 		}
 	}

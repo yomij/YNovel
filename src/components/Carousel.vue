@@ -1,21 +1,22 @@
 <template>
-	<div class="top-list f-align-l" >
+	<div class="top-list f-align-l" v-if="list.length">
 		<div class="bg" :style="{
-			'background-image': 'url('+ list[activeIndex].mainImg +')'
+			'background-image': 'url('+ list[activeIndex].mainImg.url +')'
 		}"></div>
 		<ul class="carousel-list">
-			<li v-for="(book, index) in list.slice(0, 3)" :key="index" class="book" :class="{active: index === activeIndex}">
+			<li  @click="toDetail(index)" v-for="(book, index) in list.slice(0, 3)" :key="index" class="book" :class="{active: index === activeIndex}">
 				{{index + 1 + '.' + book.title}} <span>{{book.author}}</span>
 			</li>
 		</ul>
 		<div class="img-container">
-			<img v-for="(book, index) in list" :key="index" :src="book.mainImg"
+			<img @click="toDetail(index)"
+					v-for="(book, index) in list" :key="index" :src="book.mainImg.url"
 					 :style="{
 						'z-index': 20 - (activeIndex - transList[activeIndex][index]),
 						transition: `all ${activeIndex === index ? '.8' : '.4'}s`,
-						height: 95 - 6.25 * (activeIndex - transList[activeIndex][index]) + 'px',
-						left: 3.125 * (activeIndex - transList[activeIndex][index]) * 4 + 'px',
-						width: 70 - 6.25 * (activeIndex - transList[activeIndex][index]) + 'px',
+						height: (95 - 6.25 * (activeIndex - transList[activeIndex][index])) * 2 + 'rpx',
+						left: 3.125 * (activeIndex - transList[activeIndex][index]) * 8 + 'rpx',
+						width: (70 - 6.25 * (activeIndex - transList[activeIndex][index])) * 2 + 'rpx',
 					 }"/>
 		</div>
 	</div>
@@ -37,6 +38,11 @@
 				transList: [[0, -1, -2], [-1, 1, 0], [1, 0, 2]],
 				activeIndex: 0
 			}
+		},
+		methods: {
+		  toDetail(index) {
+		    this.$router.push({path: '/pages/bookDetail/index', query: {bookId: this.list[index]._id}})
+		  }
 		}
 	}
 </script>

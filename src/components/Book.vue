@@ -1,6 +1,6 @@
 <template>
 	<div class="book" @click="$router.push('/pages/bookDetail/index?bookId=' + book._id)">
-		<img :src="book.mainImg"/>
+		<img :src="book.mainImg.url"/>
 		<p class="title">{{book.title}}</p>
 		<p class="author">{{book.author}}</p>
 	</div>

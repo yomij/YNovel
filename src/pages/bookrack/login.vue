@@ -8,16 +8,16 @@
       <div class="title f-15 t-a-c">账号登录</div>
       <div>
         <div class="y-input f-align-l van-hairline--bottom">
-          <i class="iconfont icon-yonghu"></i>
-					<input class="f-g-1" placeholder="请输入邮箱/手机号/用户名" type="text"/>
+          <i class="iconfont icon-yonghu icon-c"></i>
+					<input v-model="phone" class="f-g-1" placeholder="请输入手机号" type="text"/>
         </div>
         <div class="y-input f-align-l van-hairline--bottom">
-          <i class="iconfont icon-yonghu"></i>
-          <input class="f-g-1" placeholder="请输入密码" type="text"/>
-          <i class="iconfont icon-kejian" ></i>
+          <i class="iconfont icon-mima icon-c"></i>
+          <input v-model="password" class="f-g-1" placeholder="请输入密码" :type="showPassword ? 'text' : 'password'"/>
+          <i class="iconfont icon-kejian" @touchstart="showPassword = true" @touchend="showPassword = false"></i>
         </div>
 				<p class="c-cyan f-11 agreement">同意<用户协议></p>
-        <button class="login">登陆</button>
+        <button @click="login" class="login" :style="{opacity: phoneOk && passwordOk ? '1' : '.8'}">登陆</button>
       </div>
     </div>
 	  <van-toast id="van-toast"/>
@@ -57,11 +57,22 @@ export default {
   },
   data() {
     return {
-			userInfo: null
+			userInfo: null,
+	    password: '',
+	    phone: '',
+	    showPassword: false
     }
   },
 	created () {
 		// Megalo.getSetting().then(res => console.log(res))
+	},
+	computed: {
+    phoneOk() {
+      return /^1\d{10}$/g.test(this.phone)
+		},
+		passwordOk() {
+      return this.password.length >= 6
+		}
 	},
   methods:{
 	  getUserInfo(e) {
@@ -84,7 +95,33 @@ export default {
 				  }
 			  })
 		  }))
-	  }
+	  },
+	  login() {
+		  if (!this.phoneOk) {
+		    return this.$toast.fail('请输入正确手机号')
+		  }
+		  if (!this.passwordOk) {
+        return this.$toast.fail('密码错误')
+		  }
+	    this.$api.login({
+		    phone: this.phone,
+		    password: this.password
+	    }).then(res => {
+        if (res.status === 200) {
+          console.log(res.data.token)
+          Megalo.setStorage({
+            key: 'authorization',
+            data: res.data.token
+          })
+          this.$toast('登陆成功')
+          Megalo.switchTab({
+            url: '/pages/bookrack'
+          })
+        } else {
+          this.$toast.fail(res.message)
+        }
+	    })
+		}
   }
 }
 </script>
@@ -130,12 +167,14 @@ export default {
 		padding: 16px 6px;
 		font-size: 15px;
 		input {
+			color: #d2d1d9;
 			margin: 0 15px;
 		}
   }
   button.login {
     width: 78.4%;
     height: 50px;
+	  line-height: 50px;
     border-radius: 1000px;
     color: #fff;
 		background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
@@ -145,6 +184,7 @@ export default {
 	  position: relative;
 	  transform: translateX(-50%);
 	  left: 50%;
+	  font-size: 16px;
   }
 	.agreement {
 		margin: 16px 0 0 4%;
@@ -173,5 +213,10 @@ export default {
 			color: #3ccc87;
     }
   }
+
+
+	.icon-c {
+		color: #d2d1d9;
+	}
 }
 </style>

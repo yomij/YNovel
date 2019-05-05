@@ -6,6 +6,9 @@ import megaloRouter  from 'megalo-router'
 
 import Toast from '@/static/vant/toast/toast';
 import formatDate from '@/utils/formatDate'
+import dateAgo from '@/utils/dateAgo'
+import throttle from '@/utils/throttle'
+import bev from '@/utils/behaivor'
 
 Vue.use(megaloRouter, {
 	mode: 'strict', // strict or loose 可配置项，不配置的话默认为strict
@@ -18,11 +21,16 @@ Vue.use(megaloRouter, {
 })
 
 Vue.use(VHtmlPlugin)
+
 Vue.prototype.$api = api
 Vue.prototype.$toast = Toast
 Vue.prototype.$utils = {
-	formatDate
+	formatDate,
+	dateAgo,
+	throttle,
+	bev
 }
+Megalo.prototype.$toast = Toast
 
 const app = new Vue(App)
 
@@ -32,40 +40,39 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
-			// 'pages/comment/index',
-	    // 'pages/bookrack/login',
-	    'pages/bookStore',
-	    'pages/personalCenter/index',
-	    'pages/bookDetail/index',
 
+	    // 'pages/bookrack/login',
+	    'pages/bookDetail/index',
+	    'pages/bookStore',
 			'pages/readPage/index',
+      'pages/personalCenter/index',
 	    // 'pages/readPage/index',
 			'pages/searchResult/index',
 	    'pages/recommend',
 			'pages/bookrack',
-			// 'pages/bookrack/login',
+			'pages/bookrack/login',
     ],
     tabBar: {
-      color: '#333',
-      selectedColor: '#007d37',
+      color: '#3e4347',
+      selectedColor: '#e34a4f',
       list: [
         {
         pagePath: 'pages/recommend',
         text: '推荐',
-        iconPath: 'static/imgs/mine.png',
-        selectedIconPath: 'static/imgs/mine_on.png',
+        iconPath: 'static/imgs/recommend.png',
+        selectedIconPath: 'static/imgs/recommend-a.png',
         },
 				{
 					pagePath: 'pages/bookStore',
 					text: '书城',
-					iconPath: 'static/imgs/home.png',
-					selectedIconPath: 'static/imgs/home_on.png',
+					iconPath: 'static/imgs/bookstore.png',
+					selectedIconPath: 'static/imgs/bookstore-a.png',
 				},
 				{
 					pagePath: 'pages/bookrack',
 					text: '书架',
-					iconPath: 'static/imgs/mine.png',
-					selectedIconPath: 'static/imgs/mine_on.png',
+					iconPath: 'static/imgs/bookrack.png',
+					selectedIconPath: 'static/imgs/bookrack-a.png',
 				}
       ]
     },
@@ -77,7 +84,8 @@ export default {
     },
 		"usingComponents": {
 			"van-search": "/vant/search/index",
-			"van-toast": "/vant/toast/index"
+			"van-toast": "/vant/toast/index",
+			"van-popup": "/vant/popup/index",
 		}
   }
 }
