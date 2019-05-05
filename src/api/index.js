@@ -51,6 +51,14 @@ const subscription = data => {
 	})
 }
 
+const readInfo = data => {
+	return req({
+		url: '/api/behavior/readinfo',
+		method: 'get',
+		data
+	})
+}
+
 export default {
   loginWx,
 	getColor,
@@ -58,5 +66,6 @@ export default {
   getBook,
   getChapter,
   getChapterList,
-	subscription
+	subscription,
+	readInfo
 }

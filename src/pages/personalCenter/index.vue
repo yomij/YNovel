@@ -1,22 +1,23 @@
 <template>
 	<div class="personal-center">
 		<div class="box">
-			<img :src="'http://img.yomij.cn/a3/0d/a30d06faced7692657a55f6472006b99.jpg'"/>
-			<p class="nick">{{'testname'}}</p>
+			<img :src="info.user.avatar"/>
+			<p class="nick">{{info.user.nickname}}</p>
 			<div class="f-align">
 				<div class="item">
-					<div class="f-align num"><h1>{{5}}</h1><span class="f-10">本</span></div>
+					<div class="f-align num"><h1>{{info.totalRead}}}</h1><span class="f-10">本</span></div>
 					<button>读过</button>
 				</div>
 				<div class="border"></div>
 				<div class="item">
-					<div class="f-align num"><h1>{{13}}</h1><span class="f-10">小时</span></div>
+					<div class="f-align num"><h1>{{info.readTime}}</h1><span class="f-10">小时</span></div>
 					<button>累计阅读</button>
 				</div>
 			</div>
 		</div>
-		<div class="f-a-s problem van-hairline--top-bottom">
+		<div class="f-a-s problem van-hairline--top-bottom" @click="problem">
 			<i class="iconfont icon-weixin"></i>问题反馈
+			<input v-model="problemText" v-show="problemText"/>
 		</div>
 		<p class="exit" @click="exit">退出登陆</p>
 	</div>
@@ -29,15 +30,33 @@
 		},
 		data() {
 			return {
-			
+				info: {
+					user:{
+						avatar: '',
+						nickname: ''
+					},
+					totalRead: '',
+					readTime: ''
+				},
+				showInput: false,
+				problemText: ''
 			}
 		},
-		created () {
+		onShow () {
 			// 获取数据
+			this.$api.readInfo().then(res => {
+				if(res.status === 200) {
+					this.info = res.data
+				}
+			})
 		},
 		methods:{
 			exit() {
 			
+			},
+			problem() {
+				this.problemText = ''
+				this.showInput = true
 			}
 		}
 	}
