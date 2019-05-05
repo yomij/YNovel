@@ -89,6 +89,9 @@
 		 */
 		methods:{
 			login () {
+				if (this.userInfo) {
+					return this.$router.push({path: '/pages/personCenter/index'})
+				}
 				this.$router.push({query: {id: 1}, path: '/pages/bookrack/login'})
 			},
 			showOperation (i) {
