@@ -81,7 +81,7 @@
 				query.selectAll('#aaaa-y').boundingClientRect()
 				const that = this
 				query.exec(function (res) {
-					that.textHeight = res[0][0].height
+					that.textHeight = 10
 					console.log(that.inputBottom , that.textHeight,   'rpx')
 				})
 
@@ -111,11 +111,8 @@
         if (!content) {
           return this.$toast.fail('请输入内容')
         }
-        const {bookId, chapterId} = this.$route.query
         this.$api.problem({
-          bookId,
-          chapterId,
-          content: content
+          problem: content
         }).then(res => {
           if (res.status === 200) {
             this.$toast.success('提交成功')
