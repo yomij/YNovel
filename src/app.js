@@ -40,17 +40,18 @@ export default {
   config: {
     // pages 的首个页面会被编译成首页
     pages: [
+			'pages/bookrack/login',
+			'pages/personalCenter/index',
 
 	    // 'pages/bookrack/login',
 	    'pages/bookDetail/index',
 	    'pages/bookStore',
 			'pages/readPage/index',
-      'pages/personalCenter/index',
+
 	    // 'pages/readPage/index',
 			'pages/searchResult/index',
 	    'pages/recommend',
 			'pages/bookrack',
-			'pages/bookrack/login',
     ],
     tabBar: {
       color: '#3e4347',

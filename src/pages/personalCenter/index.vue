@@ -19,10 +19,13 @@
 		<div class="f-a-s problem van-hairline--top-bottom" @click="problem">
 			<i class="iconfont icon-weixin"></i>问题反馈
 		</div>
-		<div class="input-box" v-show="showInput" :style="{bottom: (inputBottom + textHeight) * 2  + 'rpx'}">
-			<textarea id="aaaa-y" :auto-height="true" :show-confirm-bar="false" class="iiinput" @focus="inputFocus" :adjust-position="false" :focus="true" :auto-focus="true" v-model="problemText" v-show="showInput" />
+		<div class="bg" v-show="showInput" @click="showInput = false"></div>
+		<div class="input-box f-s-b" v-show="showInput" :style="{bottom: (inputBottom + textHeight) * 2  + 'rpx'}">
+			<input id="aaaa-y" @blur="blur" class="iiinput" @focus="inputFocus" :adjust-position="false" :focus="true" v-model="problemText" />
+			<span class="finish c-lb" @click="submit">完成</span>
 		</div>
 		<p class="exit" @click="exit">退出登陆</p>
+		<van-toast id="van-toast"/>
 	</div>
 </template>
 
@@ -74,13 +77,13 @@
 				})
 			},
 			inputFocus(e){
-				// const query = wx.createSelectorQuery()
-				// query.selectAll('#aaaa-y').boundingClientRect()
-				// const that = this
-				// query.exec(function (res) {
-				// 	that.textHeight = res[0][0].height
-				// 	console.log(that.inputBottom , that.textHeight,   'rpx')
-				// })
+				const query = wx.createSelectorQuery()
+				query.selectAll('#aaaa-y').boundingClientRect()
+				const that = this
+				query.exec(function (res) {
+					that.textHeight = res[0][0].height
+					console.log(that.inputBottom , that.textHeight,   'rpx')
+				})
 
 				this.inputBottom = e.detail.height
 				console.log(e, this.inputBottom)
@@ -94,10 +97,33 @@
 				// 	console.log(that.inputBottom , that.textHeight,   'rpx')
 				// })
 			},
+      blur() {
+        this.inputBottom = 0
+        this.textHeight = 0
+	      setTimeout(() => this.showInput = false, 1000)
+      },
 			problem() {
 				this.problemText = ''
 				this.showInput = true
 			},
+      submit (e) {
+        const content = this.problemText
+        if (!content) {
+          return this.$toast.fail('请输入内容')
+        }
+        const {bookId, chapterId} = this.$route.query
+        this.$api.problem({
+          bookId,
+          chapterId,
+          content: content
+        }).then(res => {
+          if (res.status === 200) {
+            this.$toast.success('提交成功')
+            this.showInput = false
+	          this.problemText = ''
+          }
+        })
+      },
 			transTime(t) {
 				if(!t || t < 10 * 1000) return {v:0,k:'小时'}
 				if (t < 60 * 1000) return {v:(t/ 1000).toFixed(0), k: '秒'}
@@ -111,6 +137,15 @@
 <style lang="scss" scoped>
 	.personal-center {
 		padding:  15px;
+	}
+	.bg {
+		position: absolute;
+		z-index: 10;
+		background-color: rgba(0,0,0, .1);
+		height: 100%;
+		width: 100%;
+		left: 0;
+		top: 0;
 	}
 	.box {
 		position: relative;
@@ -184,7 +219,7 @@
 		margin-top: 18px;
 	}
 	.iiinput {
-		background-color: rgba(57, 74, 113, .3);
+		background-color: rgba(57, 74, 113, .1);
 		width: 293px;
 		font-size: 14px;
 		color: #555;
@@ -195,9 +230,10 @@
 	.input-box {
 		position: fixed;
 		padding: 9px 15px;
+		z-index: 11;
 		left: 0;
 		width: 100%;
 		background-color: #fff;
-		border-top: 1px solid rgba(57, 74, 113, .3);
+		border-top: 1px solid rgba(57, 74, 113, .1);
 	}
 </style>
