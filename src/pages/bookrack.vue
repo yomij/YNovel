@@ -164,7 +164,12 @@
 			  if(!this.userInfo)
 					this.$router.push({query: {id: 1}, path: '/pages/bookrack/login'})
 				else {
-				  console.log('去个人信息')
+				  this.$router.push({
+					  query: {
+				  	  avatar: encodeURIComponent(this.userInfo.avatarUrl),
+						  nickname: this.userInfo.nickname
+					  },
+					  path: '/pages/personalCenter/index'})
 			  }
 			},
       pinjia(item, index) {

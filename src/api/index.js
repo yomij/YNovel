@@ -198,12 +198,19 @@ const behavior = (data) => {
 }
 
 
-const readInfo = data => {
+const readInfo = () => {
 	return req({
 		url: '/api/behavior/readinfo',
-		method: 'get',
-		data
+		method: 'get'
 	})
+}
+
+const problem = data => {
+  return req({
+    url: '/api/user/problem',
+    method: 'post',
+    data
+  })
 }
 
 export default {
@@ -231,7 +238,7 @@ export default {
   unlikeComment,
   grade,
   recommend,
-  behavior
-	subscription,
-	readInfo
+  behavior,
+	readInfo,
+  problem
 }
