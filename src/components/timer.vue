@@ -13,7 +13,8 @@
 				<button @click.prevent="getVerifiedCode"
 				        :class="{right_phone_number: rightPhoneNumber && rightPassword,
                    wrong_phone_format: wrongPhoneFormat || wrongPasswordFormat}"
-				        v-show='!computedTime'>获取验证码</button>
+				        v-show='!computedTime'>获取验证码
+				</button>
 				<button class="compute_time" v-show="computedTime">{{computedMessage}}</button>
 			</div>
 		</div>
@@ -35,9 +36,9 @@
         wrongPhoneFormat: false,
         wrongPasswordFormat: false,
         phoneNumber: '',
-	      code: '',
-	      password: '',
-	      isSend: false
+        code: '',
+        password: '',
+        isSend: false
       }
     },
     props: {
@@ -60,7 +61,7 @@
         }
         return regx;
       },
-      rightPassword () {
+      rightPassword() {
         const res = this.password.length >= 6
         if (!res) {
           this.wrongPasswordFormat = true;
@@ -77,15 +78,15 @@
       getVerifiedCode() {
         if (!this.password || this.password.length < 6) return this.$toast.fail('请输入六位密码')
         if (this.rightPhoneNumber) {
-					this.$api.verifycode({
-						phone: this.phoneNumber
-					}).then(res => {
-					  if(res.status === 200) {
+          this.$api.verifycode({
+            phone: this.phoneNumber
+          }).then(res => {
+            if (res.status === 200) {
               this.$toast.success('验证码已发送')
-						  this.isSend = true
+              this.isSend = true
               this.setTimer();
-					  }
-					})
+            }
+          })
         } else {
           this.$toast.fail('请输入正确的手机号')
         }
@@ -102,18 +103,18 @@
         }
         this.timer();
       },
-	    submit() {
-        if(!this.isSend) return this.$toast.fail('请先获取验证码')
-        if(!/^1\d{10}$/gi.test(this.phoneNumber)) return this.$toast.fail('请输入正确的手机号')
+      submit() {
+        if (!this.isSend) return this.$toast.fail('请先获取验证码')
+        if (!/^1\d{10}$/gi.test(this.phoneNumber)) return this.$toast.fail('请输入正确的手机号')
         if (!this.password || this.password.length < 6) return this.$toast.fail('请输入六位密码')
         if (/^\d{6}$/gi.test(this.code)) {
           this.$toast.loading('绑定中')
           this.$api.verify({
             phone: this.phoneNumber,
-	          code: this.code,
+            code: this.code,
             password: this.password
           }).then(res => {
-            if(res.status === 200) {
+            if (res.status === 200) {
               this.$toast.success('绑定成功')
               this.$emit('verifyPass', this.phoneNumber)
             } else {
@@ -125,27 +126,28 @@
         }
       }
     },
-    destroyed () {
+    destroyed() {
       // 组件被销毁时调用
     }
   }
 </script>
 
 <style lang="scss" scoped>
-	 button{
-		font-family: Helvetica Neue,Tahoma,Arial;
+	button {
+		font-family: Helvetica Neue, Tahoma, Arial;
 		padding: 0 13px;
-		font-size:11px;
-		height:27px;
-		line-height:27px;
-		color:#fff;
+		font-size: 11px;
+		height: 27px;
+		line-height: 27px;
+		color: #fff;
+		
 		&.login {
 			width: 78.4%;
 			height: 40px;
 			line-height: 40px;
 			border-radius: 1000px;
 			color: #fff;
-			background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
+			background: linear-gradient(45deg, #ec383c 0%, #fd563d 100%);
 			opacity: .8;
 			font-size: 18px;
 			margin-top: 34px;
@@ -154,23 +156,28 @@
 			left: 50%;
 		}
 	}
+	
 	.y-input {
 		width: 100%;
 		margin: 0 auto;
 		padding: 16px 6px;
 		font-size: 15px;
+		
 		input {
 			margin: 0 15px;
 			flex-grow: 1;
 			color: #666;
 		}
 	}
+	
 	button {
 		background-color: #919191;
 	}
-	.right_phone_number{
+	
+	.right_phone_number {
 		background-color: #ec383c;
 	}
+	
 	.wrong_phone_format {
 		background-color: #F7C0B3;
 	}

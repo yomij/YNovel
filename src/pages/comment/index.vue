@@ -1,7 +1,7 @@
 <template>
 	<div class="comment-box">
 		<van-toast id="van-toast"/>
-		<nav class="nav f-align"  :style="{'padding-top': statusBarHeight * 2  + 'rpx'}">
+		<nav class="nav f-align" :style="{'padding-top': statusBarHeight * 2  + 'rpx'}">
 			<i class=" back iconfont icon-fanhui" @click="$router.go(-1)"></i>
 			<div class="f-dir-column">
 				<p>{{}}章评</p>
@@ -15,7 +15,7 @@
 		<scroll-view
 				class="scroll"
 				scroll-y
-
+				
 				:lower-threshold="100"
 				@scroll="scroll"
 				@scrolltolower="scrolltolower"
@@ -33,20 +33,20 @@
 				@close="boxShow = false"
 		>
 			<!--<textarea-->
-					<!--fixed="true"-->
-					<!--:adjust-position="true"-->
-					<!--:show-confirm-bar="false"-->
-					<!--:cursor-spacing="300"-->
-					<!--placeholder="placeholder颜色是红色的"-->
-					<!--placeholder-style="color:red;"/>-->
+			<!--fixed="true"-->
+			<!--:adjust-position="true"-->
+			<!--:show-confirm-bar="false"-->
+			<!--:cursor-spacing="300"-->
+			<!--placeholder="placeholder颜色是红色的"-->
+			<!--placeholder-style="color:red;"/>-->
 			<form @submit="commentSubmit">
 				<div class="operation f-s-b">
 					<i class=" back iconfont icon-close" @click="boxShow = false"></i>
 					<p class="f-g-1">发表评论</p>
-					<button class='sub' form-type="submit" >提交</button>
+					<button class='sub' form-type="submit">提交</button>
 				</div>
-
-
+				
+				
 				<textarea
 						name="content"
 						class="area"
@@ -69,100 +69,101 @@
 
 
 <script>
-import Comment from '@/components/Comment.vue'
-export default {
-  components: {
-    Comment
-  },
-  data() {
-    return {
-      statusBarHeight: 20,
-	    scrollHeight: 250,
-      boxShow: false,
-      comments: [],
-	    totalCount: 0,
-      content: '',
-	    isLoading: false,
-	    pageNo: 1,
-	    pageSize: 10
-    }
-  },
-  async created () {
-    const res = Megalo.getSystemInfo()
-    this.statusBarHeight = res.statusBarHeight
-    this.scrollHeight = res.screenHeight - 90 -52 - this.statusBarHeight
-	  this.isLoading = true
-	  this.$toast.loading('加载中')
-    const comment = await this.$api.chapterComment({
-      chapterId: this.$route.query.chapterId,
-      pageNo: 1,
-      pageSize: 10,
-	    type: 1
-    })
-    if (comment.status === 200) {
-      this.comments = comment.data.result
-	    this.totalCount = comment.data.totalCount
-	    this.pageNo += 1
-      this.$toast.clear()
-    } else {
-      this.$toast.clear()
-      this.$toast.fail(res.message)
-    }
-
-    this.isLoading = false
-  },
-  methods:{
-    // scroll (e) {
-    //   // console.log(e)
-    // },
-    scrolltolower (e) {
-      this.getData()
+  import Comment from '@/components/Comment.vue'
+  
+  export default {
+    components: {
+      Comment
     },
-    focus(e) {
-      console.log(e)
-    },
-    inputText(e) {
-			this.content = e.detail.value
-    },
-	  getData(type = 1) {
-      if ((this.pageNo - 1) * this.pageSize > this.totalCount) return
-		  if (this.isLoading) return
-      this.isLoading = true
-      this.$api.chapterComment({
-        chapterId: this.$route.query.chapterId,
-        pageNo: this.pageNo,
-        pageSize:  this.pageSize ,
-        type
-      }).then(comment => {
-        if (comment.status === 200) {
-          this.pageNo += 1
-          this.comments.push(...comment.data.result)
-          this.totalCount = comment.data.totalCount
-        }
-        this.isLoading = false
-      })
-	  },
-	  commentSubmit (e) {
-			const content = e.detail.value.content
-      if (!content) {
-        return this.$toast.fail('请输入内容')
+    data() {
+      return {
+        statusBarHeight: 20,
+        scrollHeight: 250,
+        boxShow: false,
+        comments: [],
+        totalCount: 0,
+        content: '',
+        isLoading: false,
+        pageNo: 1,
+        pageSize: 10
       }
-      const {bookId, chapterId} = this.$route.query
-      this.$api.addChapterComment({
-	      bookId,
-	      chapterId,
-	      content: content
-      }).then(res => {
-        if (res.status === 200) {
-					this.comments.unshift(res.data)
-	        this.boxShow = false
-	        this.content = ''
-	        this.totalCount += 1
-        }
+    },
+    async created() {
+      const res = Megalo.getSystemInfo()
+      this.statusBarHeight = res.statusBarHeight
+      this.scrollHeight = res.screenHeight - 90 - 52 - this.statusBarHeight
+      this.isLoading = true
+      this.$toast.loading('加载中')
+      const comment = await this.$api.chapterComment({
+        chapterId: this.$route.query.chapterId,
+        pageNo: 1,
+        pageSize: 10,
+        type: 1
       })
-	  }
+      if (comment.status === 200) {
+        this.comments = comment.data.result
+        this.totalCount = comment.data.totalCount
+        this.pageNo += 1
+        this.$toast.clear()
+      } else {
+        this.$toast.clear()
+        this.$toast.fail(res.message)
+      }
+      
+      this.isLoading = false
+    },
+    methods: {
+      // scroll (e) {
+      //   // console.log(e)
+      // },
+      scrolltolower(e) {
+        this.getData()
+      },
+      focus(e) {
+        console.log(e)
+      },
+      inputText(e) {
+        this.content = e.detail.value
+      },
+      getData(type = 1) {
+        if ((this.pageNo - 1) * this.pageSize > this.totalCount) return
+        if (this.isLoading) return
+        this.isLoading = true
+        this.$api.chapterComment({
+          chapterId: this.$route.query.chapterId,
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+          type
+        }).then(comment => {
+          if (comment.status === 200) {
+            this.pageNo += 1
+            this.comments.push(...comment.data.result)
+            this.totalCount = comment.data.totalCount
+          }
+          this.isLoading = false
+        })
+      },
+      commentSubmit(e) {
+        const content = e.detail.value.content
+        if (!content) {
+          return this.$toast.fail('请输入内容')
+        }
+        const {bookId, chapterId} = this.$route.query
+        this.$api.addChapterComment({
+          bookId,
+          chapterId,
+          content: content
+        }).then(res => {
+          if (res.status === 200) {
+            this.comments.unshift(res.data)
+            this.boxShow = false
+            this.content = ''
+            this.totalCount += 1
+          }
+        })
+      }
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -174,9 +175,11 @@ export default {
 		padding-bottom: 52px;
 		color: #333;
 	}
+	
 	.scroll {
 		height: 100%;
-	 }
+	}
+	
 	.nav {
 		position: fixed;
 		top: 0;
@@ -184,33 +187,38 @@ export default {
 		width: 100%;
 		text-align: center;
 		/*background: rgb(30, 32, 55);*/
-		color:#333;
+		color: #333;
 		background-color: #fff;
 		display: none;
 		transition: all ease-in .15s;
 		z-index: 2222;
+		
 		.total {
 			font-size: 11px;
 			color: #777;
 		}
+		
 		i {
 			position: absolute;
 			left: 16px;
 		}
 	}
+	
 	.cbox /deep/ {
 		position: fixed;
+		
 		.van-popup, ._van-popup {
 			border-radius: 8px 8px 0 0;
 			height: 315px !important;
 			margin-top: 70px;
 		}
+		
 		.van-overlay {
 			position: absolute;
 			height: 100%;
 			width: 100%;
 		}
-
+		
 		textarea {
 			box-sizing: border-box;
 			padding: 18px;
@@ -228,35 +236,39 @@ export default {
 			z-index: 10000;
 			padding: 18px 20px;
 			color: #38393e;
+			
 			span {
 				color: #bfc3e8;
 			}
+			
 			p {
 				font-size: 15px;
 				text-align: center;
 			}
+			
 			.sub {
 				color: #bfc3e8;
 				background: none;
 				font-size: 15px;
 				border: none;
-				&:after{
+				
+				&:after {
 					display: none;
 				}
 			}
 		}
-
+		
 		.bottom {
 			height: 52px;
 			position: absolute;
 			bottom: 0;
 		}
 	}
-
+	
 	footer {
 		height: 52px;
 		padding: 8px 18px;
-
+		
 		p {
 			border-radius: 4px;
 			padding-left: 10px;
@@ -267,7 +279,7 @@ export default {
 			background-color: #f4f8fb;
 		}
 	}
-
+	
 	.line-height70 {
 		line-height: 200px;
 		text-align: center;

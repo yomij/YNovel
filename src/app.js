@@ -4,7 +4,7 @@ import api from '@/api'
 import VHtmlPlugin from '@megalo/vhtml-plugin'
 import megaloRouter  from 'megalo-router'
 
-import Toast from '@/static/vant/toast/toast';
+import Toast from 'vant-weapp/dist/toast/toast';
 import formatDate from '@/utils/formatDate'
 import dateAgo from '@/utils/dateAgo'
 import throttle from '@/utils/throttle'

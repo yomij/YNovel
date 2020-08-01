@@ -21,7 +21,8 @@
 		</div>
 		<div class="bg" v-show="showInput" @click="showInput = false"></div>
 		<div class="input-box f-s-b" v-show="showInput" :style="{bottom: (inputBottom + textHeight) * 2  + 'rpx'}">
-			<input id="aaaa-y" @blur="blur" class="iiinput" @focus="inputFocus" :adjust-position="false" :focus="true" v-model="problemText" />
+			<input id="aaaa-y" @blur="blur" class="iiinput" @focus="inputFocus" :adjust-position="false" :focus="true"
+			       v-model="problemText"/>
 			<span class="finish c-lb" @click="submit">完成</span>
 		</div>
 		<p class="exit" @click="exit">退出登陆</p>
@@ -30,83 +31,82 @@
 </template>
 
 <script>
-	export default {
-		components: {
-		},
-		data() {
-			return {
-				info: {
-					user:{
-						avatar: '',
-						nickname: ''
-					},
-					totalRead: '',
-					readTime: {k:'小时', v: 0}
-				},
-				showInput: false,
-				problemText: '',
-				inputBottom: 0,
-				textHeight: 0
-			}
-		},
-		onShow () {
-			// 获取数据
-			this.$api.readInfo().then(res => {
-				if(res.status === 200) {
-					const data = res.data
-					this.info = {
-						user:{
-							avatar: decodeURIComponent(this.$route.query.avatar),
-							nickname: this.$route.query.nickname
-						},
-						totalRead: data.count || 0,
-						readTime: this.transTime(data.readTime)
-					}
-				}
-			})
-		},
-
-		methods:{
-			exit() {
-				const _this = this
-				Megalo.removeStorage({
-					key: 'authorization',
-					success() {
-						_this.$router.reLaunch('/pages/bookStore')
-					}
-				})
-			},
-			inputFocus(e){
-				const query = wx.createSelectorQuery()
-				query.selectAll('#aaaa-y').boundingClientRect()
-				const that = this
-				query.exec(function (res) {
-					that.textHeight = 10
-					console.log(that.inputBottom , that.textHeight,   'rpx')
-				})
-
-				this.inputBottom = e.detail.height
-				console.log(e, this.inputBottom)
-			},
-			input(e) {
-				// const query = wx.createSelectorQuery()
-				// query.selectAll('#aaaa-y').boundingClientRect()
-				// const that = this
-				// query.exec(function (res) {
-				// 	that.textHeight = res[0][0].height
-				// 	console.log(that.inputBottom , that.textHeight,   'rpx')
-				// })
-			},
+  export default {
+    components: {},
+    data() {
+      return {
+        info: {
+          user: {
+            avatar: '',
+            nickname: ''
+          },
+          totalRead: '',
+          readTime: {k: '小时', v: 0}
+        },
+        showInput: false,
+        problemText: '',
+        inputBottom: 0,
+        textHeight: 0
+      }
+    },
+    onShow() {
+      // 获取数据
+      this.$api.readInfo().then(res => {
+        if (res.status === 200) {
+          const data = res.data
+          this.info = {
+            user: {
+              avatar: decodeURIComponent(this.$route.query.avatar),
+              nickname: this.$route.query.nickname
+            },
+            totalRead: data.count || 0,
+            readTime: this.transTime(data.readTime)
+          }
+        }
+      })
+    },
+    
+    methods: {
+      exit() {
+        const _this = this
+        Megalo.removeStorage({
+          key: 'authorization',
+          success() {
+            _this.$router.reLaunch('/pages/bookStore')
+          }
+        })
+      },
+      inputFocus(e) {
+        const query = wx.createSelectorQuery()
+        query.selectAll('#aaaa-y').boundingClientRect()
+        const that = this
+        query.exec(function (res) {
+          that.textHeight = 10
+          console.log(that.inputBottom, that.textHeight, 'rpx')
+        })
+        
+        this.inputBottom = e.detail.height
+        console.log(e, this.inputBottom)
+      },
+      input(e) {
+        // const query = wx.createSelectorQuery()
+        // query.selectAll('#aaaa-y').boundingClientRect()
+        // const that = this
+        // query.exec(function (res) {
+        // 	that.textHeight = res[0][0].height
+        // 	console.log(that.inputBottom , that.textHeight,   'rpx')
+        // })
+      },
       blur() {
         this.inputBottom = 0
         this.textHeight = 0
-	      setTimeout(() => this.showInput = false, 1000)
+        setTimeout(() => this.showInput = false, 1000)
       },
-			problem() {
-				this.problemText = ''
-				this.showInput = true
-			},
-      submit (e) {
+      problem() {
+        this.problemText = ''
+        this.showInput = true
+      },
+      submit(e) {
         const content = this.problemText
         if (!content) {
           return this.$toast.fail('请输入内容')
@@ -117,39 +117,42 @@
           if (res.status === 200) {
             this.$toast.success('提交成功')
             this.showInput = false
-	          this.problemText = ''
+            this.problemText = ''
           }
         })
       },
-			transTime(t) {
-				if(!t || t < 10 * 1000) return {v:0,k:'小时'}
-				if (t < 60 * 1000) return {v:(t/ 1000).toFixed(0), k: '秒'}
-				if (t < 60 * 60 * 1000) return {v:(t / 1000 / 60).toFixed(2), k: '分钟'}
-				else return {v:(t / 1000 / 60 / 60).toFixed(2), k: '小时'}
-			},
-		}
-	}
+      transTime(t) {
+        if (!t || t < 10 * 1000) return {v: 0, k: '小时'}
+        if (t < 60 * 1000) return {v: (t / 1000).toFixed(0), k: '秒'}
+        if (t < 60 * 60 * 1000) return {v: (t / 1000 / 60).toFixed(2), k: '分钟'}
+        else return {v: (t / 1000 / 60 / 60).toFixed(2), k: '小时'}
+      },
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
 	.personal-center {
-		padding:  15px;
+		padding: 15px;
 	}
+	
 	.bg {
 		position: absolute;
 		z-index: 10;
-		background-color: rgba(0,0,0, .1);
+		background-color: rgba(0, 0, 0, .1);
 		height: 100%;
 		width: 100%;
 		left: 0;
 		top: 0;
 	}
+	
 	.box {
 		position: relative;
 		height: 188px;
 		box-shadow: 0px 3px 12px rgba(57, 74, 113, .2);
 		margin-top: 55px;
 		border-radius: 5px;
+		
 		img {
 			height: 55px;
 			width: 55px;
@@ -158,6 +161,7 @@
 			left: 50%;
 			transform: translate(-50%, -50%);
 		}
+		
 		.nick {
 			width: 100%;
 			text-align: center;
@@ -165,26 +169,32 @@
 			color: #555;
 			padding: 40px 0 30px;
 		}
+		
 		.item {
 			position: relative;
 			text-align: center;
 			width: 50%;
+			
 			span {
 				transform: translateY(5px);
 				color: #666666;
 			}
 		}
+		
 		.border {
 			width: 2px;
 			height: 72px;
 			background-color: rgba(222, 222, 222, .2);
 		}
+		
 		.num {
 			margin-bottom: 16px;
 		}
+		
 		h1 {
 			font-size: 26px;
 		}
+		
 		button {
 			position: relative;
 			transform: translateX(-50%);
@@ -196,25 +206,29 @@
 			color: #fff;
 			width: 72px;
 			height: 30px;
-			background:linear-gradient(45deg, #ec383c 0%,#fd563d 100%);
+			background: linear-gradient(45deg, #ec383c 0%, #fd563d 100%);
 		}
 		
 	}
+	
 	.problem {
 		padding: 18px 0;
 		margin-top: 15px;
 		font-size: 14px;
-		i{
-			color:#ec383c;
+		
+		i {
+			color: #ec383c;
 			margin-right: 8px;
 		}
 	}
+	
 	.exit {
 		color: #ec383c;
 		font-size: 14px;
 		text-align: center;
 		margin-top: 18px;
 	}
+	
 	.iiinput {
 		background-color: rgba(57, 74, 113, .1);
 		width: 293px;
@@ -224,6 +238,7 @@
 		min-height: 34px;
 		padding: 0 17px;
 	}
+	
 	.input-box {
 		position: fixed;
 		padding: 9px 15px;

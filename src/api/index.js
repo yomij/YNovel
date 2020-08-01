@@ -13,15 +13,15 @@ const login = (data) => req({
 })
 
 const getColor = (params) => req({
-	url: '/api/book/t0/color',
-	method: 'get',
-	params
+  url: '/api/book/t0/color',
+  method: 'get',
+  params
 })
 
 const getUserInfo = (params) => req({
-	url: '/api/user',
-	method: 'get',
-	params
+  url: '/api/user',
+  method: 'get',
+  params
 })
 
 const getBook = (params) => {
@@ -58,11 +58,11 @@ const getChapterListMore = (params) => {
 }
 
 const subscription = data => {
-	return req({
-		url: '/api/subscription',
-		method: 'post',
-		data
-	})
+  return req({
+    url: '/api/subscription',
+    method: 'post',
+    data
+  })
 }
 
 const lastRead = data => {
@@ -172,11 +172,11 @@ const unlikeComment = data => {
 }
 
 const grade = data => {
- return req({
-   url: '/api/behavior/grade',
-   method: 'post',
-   data
- })
+  return req({
+    url: '/api/behavior/grade',
+    method: 'post',
+    data
+  })
 }
 
 
@@ -199,10 +199,10 @@ const behavior = (data) => {
 
 
 const readInfo = () => {
-	return req({
-		url: '/api/behavior/readinfo',
-		method: 'get'
-	})
+  return req({
+    url: '/api/behavior/readinfo',
+    method: 'get'
+  })
 }
 
 const problem = data => {
@@ -216,13 +216,13 @@ const problem = data => {
 export default {
   login,
   loginWx,
-	getColor,
-	getUserInfo,
+  getColor,
+  getUserInfo,
   getBook,
   getChapter,
   getChapterList,
   getChapterListMore,
-	subscription,
+  subscription,
   overhead,
   unOverhead,
   unsubscription,
@@ -239,6 +239,6 @@ export default {
   grade,
   recommend,
   behavior,
-	readInfo,
+  readInfo,
   problem
 }

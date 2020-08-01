@@ -42,6 +42,7 @@
     "megalo": "^0.7.3",
     "megalo-router": "^1.0.3",
     "octoparse": "^0.3.2",
-    "qs": "^6.6.0"
+    "qs": "^6.6.0",
+    "vant-weapp": "^0.5.28"
   }
 }

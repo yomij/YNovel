@@ -67,9 +67,6 @@
 				subList: []
 			}
 		},
-		beforeCreate() {
-			console.log('Page [hello] Vue beforeCreate')
-		},
 		created() {
       this.getData(1)
 		},
@@ -83,10 +80,6 @@
 		 * for other event handlers, please check https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/page.html
 		 */
 		methods:{
-			changeStat: function(){
-				this.t++
-				this.color = '#'+Math.floor(Math.random()*0xffffff).toString(16)
-			},
 			changeTab (index){
         this.navActive = index
 				this.getData(~~!index)
@@ -95,7 +88,6 @@
         this.$api.mianPage({
           tag
         }).then(res => {
-          console.log(res)
           const h = res.data.hottest
           this.hottest = h.splice(0, 3)
           this.hotList = h

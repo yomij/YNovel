@@ -4,14 +4,15 @@
 			'background-image': 'url('+ list[activeIndex].mainImg.url +')'
 		}"></div>
 		<ul class="carousel-list">
-			<li  @click="toDetail(index)" v-for="(book, index) in list.slice(0, 3)" :key="index" class="book" :class="{active: index === activeIndex}">
+			<li @click="toDetail(index)" v-for="(book, index) in list.slice(0, 3)" :key="index" class="book"
+			    :class="{active: index === activeIndex}">
 				{{index + 1 + '.' + book.title}} <span>{{book.author}}</span>
 			</li>
 		</ul>
 		<div class="img-container">
 			<img @click="toDetail(index)"
-					v-for="(book, index) in list" :key="index" :src="book.mainImg.url"
-					 :style="{
+			     v-for="(book, index) in list" :key="index" :src="book.mainImg.url"
+			     :style="{
 						'z-index': 20 - (activeIndex - transList[activeIndex][index]),
 						transition: `all ${activeIndex === index ? '.8' : '.4'}s`,
 						height: (95 - 6.25 * (activeIndex - transList[activeIndex][index])) * 2 + 'rpx',
@@ -23,28 +24,28 @@
 </template>
 
 <script>
-	export default {
-		name: 'carousel',
-		props: {
-			'list': Array,
-		},
-		created () {
-			setInterval(() => {
-				this.activeIndex = (this.activeIndex + 1) % 3
-			}, 3000)
-		},
-		data() {
-			return {
-				transList: [[0, -1, -2], [-1, 1, 0], [1, 0, 2]],
-				activeIndex: 0
-			}
-		},
-		methods: {
-		  toDetail(index) {
-		    this.$router.push({path: '/pages/bookDetail/index', query: {bookId: this.list[index]._id}})
-		  }
-		}
-	}
+  export default {
+    name: 'carousel',
+    props: {
+      'list': Array,
+    },
+    created() {
+      setInterval(() => {
+        this.activeIndex = (this.activeIndex + 1) % 3
+      }, 3000)
+    },
+    data() {
+      return {
+        transList: [[0, -1, -2], [-1, 1, 0], [1, 0, 2]],
+        activeIndex: 0
+      }
+    },
+    methods: {
+      toDetail(index) {
+        this.$router.push({path: '/pages/bookDetail/index', query: {bookId: this.list[index]._id}})
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -56,13 +57,16 @@
 		border-radius: 5px;
 		padding: 15px 20px;
 		overflow: hidden;
+		
 		.carousel-list {
 			width: 230px;
 			font-size: 15px;
+			
 			span {
 				font-size: 13px;
 			}
 		}
+		
 		.bg {
 			position: absolute;
 			left: 0;
@@ -75,33 +79,39 @@
 			filter: blur(20px);
 			overflow: hidden;
 		}
+		
 		.book {
 			font-size: 14px;
 			margin-bottom: 15px;
+			
 			&:last-child {
-				 margin-bottom: 0;
-			 }
+				margin-bottom: 0;
+			}
+			
 			&.active {
-				 position: relative;
-			&:after {
-				 position: absolute;
-				 left: -8px;
-				 content: '';
-				 display: inline-block;
-				 width: 0;
-				 height: 0;
-				 top: 50%;
-				 transform: translateY(-50%);
-				 border-left: 6px solid #fff;
-				 border-top: 5px solid transparent;
-				 border-bottom: 5px solid transparent;
-			 }
+				position: relative;
+				
+				&:after {
+					position: absolute;
+					left: -8px;
+					content: '';
+					display: inline-block;
+					width: 0;
+					height: 0;
+					top: 50%;
+					transform: translateY(-50%);
+					border-left: 6px solid #fff;
+					border-top: 5px solid transparent;
+					border-bottom: 5px solid transparent;
+				}
 			}
 		}
+		
 		.img-container {
 			position: relative;
 			height: 95px;
 		}
+		
 		img {
 			position: absolute;
 			top: 50%;
