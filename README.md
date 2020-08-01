@@ -62,25 +62,25 @@ src
 
 1. 书架功能，保存最近阅读内容，订阅和取消功能。登录主要支持微信登录和手机验证码登录。
 
-     <img src="doc-assets/bookshelf.png" width="480" />
+     <img src="http://img.yomij.cn/YNovel/docs/bookshelf.png" width="480" />
 
 2. 书城功能，区分男女做不同标签的书籍的初步推荐。
 
-      <img src="doc-assets/store.png" width="480" />
+      <img src="http://img.yomij.cn/YNovel/docs/store.png" width="480" />
 
 3. 推荐功能，通过基于物品的协同过滤算法实现推荐。
 
-     <img src="doc-assets/recommend.png" width="480" /> 
+     <img src="http://img.yomij.cn/YNovel/docs/recommend.png" width="480" /> 
 
 4. 阅读   
 
-     <img src="doc-assets/read.png" width="480" /> <img src="doc-assets/list.png" width="480" /> 
+     <img src="http://img.yomij.cn/YNovel/docs/read.png" width="480" /> <img src="http://img.yomij.cn/YNovel/docs/list.png" width="480" /> 
 
 5. 搜索
 
-     <img src="doc-assets/search.png" width="480" /> <img src="doc-assets/search-result.png" width="480" /> 
+     <img src="http://img.yomij.cn/YNovel/docs/search.png" width="480" /> <img src="http://img.yomij.cn/YNovel/docs/search-result.png" width="480" /> 
 
 6. 书籍详情, 其中背景色和字体颜色是根据书籍主图的主色决定的,通过主色提取得到
 
-      <img src="doc-assets/book_detail.png" width="480" />
+      <img src="http://img.yomij.cn/YNovel/docs/book_detail.png" width="480" />
 
